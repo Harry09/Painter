@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\context.c" />
+    <ClCompile Include="src\init.c" />
+    <ClCompile Include="src\input.c" />
+    <ClCompile Include="src\monitor.c" />
+    <ClCompile Include="src\window.c" />
+    <ClCompile Include="src\win32_init.c" />
+    <ClCompile Include="src\win32_monitor.c" />
+    <ClCompile Include="src\win32_time.c" />
+    <ClCompile Include="src\win32_tls.c" />
+    <ClCompile Include="src\win32_window.c" />
+    <ClCompile Include="src\winmm_joystick.c" />
+    <ClCompile Include="src\wgl_context.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\internal.h" />
+    <ClInclude Include="include\GLFW\glfw3.h" />
+    <ClInclude Include="include\GLFW\glfw3native.h" />
+    <ClInclude Include="src\win32_platform.h" />
+    <ClInclude Include="src\win32_tls.h" />
+    <ClInclude Include="src\winmm_joystick.h" />
+    <ClInclude Include="src\wgl_context.h" />
+    <ClInclude Include=".\.\glfw_config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{72184C68-CF64-3D5E-A76F-243871CD5EF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{E015304A-9655-3575-8E04-56EDCAC55764}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
