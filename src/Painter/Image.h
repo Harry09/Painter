@@ -18,7 +18,8 @@ private:
 
 	SPixel **m_pImage;
 
-	cvec3 m_byBgColor;
+	cvec3 m_byMColor; // @ Marker Color
+	cvec3 m_byBgColor; // @ Background Color
 
 	// moving renderer
 	glm::ivec2 m_iMoving;
@@ -40,5 +41,10 @@ public:
 
 	void SetBgColor(cvec3 _bgColor);
 	cvec3 GetBackgroundColor() { return m_byBgColor; }
+
+	void SetMColor(cvec3 _color) { m_byMColor = _color; }
+	cvec3 GetMColor() { return m_byMColor; }
+
+	void ClearScreen();
 };
 

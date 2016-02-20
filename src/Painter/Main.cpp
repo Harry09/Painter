@@ -10,13 +10,13 @@
 
 bool FileExists(char* name)
 {
-	if (FILE *file = fopen(name, "r")) {
+	if (FILE *file = fopen(name, "r")) 
+	{
 		fclose(file);
 		return true;
 	}
-	else {
+	else
 		return false;
-	}
 }
 
 

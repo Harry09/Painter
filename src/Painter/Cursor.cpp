@@ -20,7 +20,7 @@ CCursor::~CCursor()
 
 void CCursor::ScrollCallback(GLFWwindow* window, double x, double y)
 {
-	CClient::Get()->GetCursor()->SetScroll(y);
+	CClient::Get()->GetCursor()->SetScroll(float(y));
 }
 
 void CCursor::CursorPosCallback(GLFWwindow* window, double x, double y)
