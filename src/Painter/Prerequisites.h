@@ -39,17 +39,4 @@ class CSettings;
 class CColorPicker;
 class CFileBrowser;
 
-
-
-
-
-
-bool FileExists(char* name) {
-	if (FILE *file = fopen(name, "r")) {
-		fclose(file);
-		return true;
-	}
-	else {
-		return false;
-	}
-}
+bool FileExists(char* name);

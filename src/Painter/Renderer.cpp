@@ -2,14 +2,12 @@
 
 #include "Client.h"
 
-CRenderer::CRenderer(glm::vec2 _size) 
+CRenderer::CRenderer(glm::ivec2 _size) 
 	: m_sizeWindow(_size)
 {
-	int ulStart = GetTickCount();
-
 	InitOpenGL();
 
-	printf("CRenderer initialized! (%d milisec) \n", (GetTickCount() - ulStart));
+	printf("CRenderer initialized!\n");
 }
 
 CRenderer::~CRenderer()

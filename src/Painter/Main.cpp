@@ -8,6 +8,18 @@
   "publicKeyToken='6595b64144ccf1df' "\
   "language='*'\"")
 
+bool FileExists(char* name)
+{
+	if (FILE *file = fopen(name, "r")) {
+		fclose(file);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	LPWSTR *szArglist;

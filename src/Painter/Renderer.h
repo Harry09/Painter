@@ -11,7 +11,7 @@ private:
 	void InitOpenGL();
 
 public:
-	CRenderer(glm::	vec2 _size);
+	CRenderer(glm::ivec2 _size);
 	~CRenderer();
 	
 	//rgb = 0 - 255
