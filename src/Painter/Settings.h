@@ -8,6 +8,9 @@ private:
 	glm::ivec2 m_iResolution;
 	HWND m_hWnd;
 
+private:
+	static int CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 public:
 	CSettings();
 	~CSettings();
@@ -17,7 +20,7 @@ public:
 	void Save(bool getDlgValue = true);
 	void Load();
 
-	glm::ivec2 GetResolution() { return m_iResolution; }
+	void CreateDlg();
 
-	static int CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	glm::ivec2 GetResolution() { return m_iResolution; }
 };

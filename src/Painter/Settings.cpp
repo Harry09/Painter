@@ -2,6 +2,7 @@
 
 #include "Client.h"
 #include "Renderer.h"
+#include "Menu.h"
 
 CSettings::CSettings()
 {
@@ -15,7 +16,7 @@ CSettings::CSettings()
 		Load();
 	}
 
-	m_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_SETTINGS), 0, DialogProc, 0);
+	//m_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_SETTINGS), 0, DialogProc, 0);
 
 	printf("CSettings initialized!\n");
 }
@@ -141,4 +142,9 @@ void CSettings::Load()
 	
 	sprintf(_sHeight, "%d", m_iResolution.y);
 	SetWindowTextA(GetDlgItem(m_hWnd, IDC_HEIGHT), _sHeight);
+}
+
+void CSettings::CreateDlg()
+{
+	m_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_SETTINGS), CClient::Get()->GetRenderer()->GetHWnd(), DialogProc, 0);
 }

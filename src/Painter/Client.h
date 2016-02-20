@@ -12,9 +12,9 @@ private:
 	CCursor* m_pCursor;
 	CKeyboard* m_pKeyboard;
 	CSettings* m_pSettings;
+	CMenu* m_pMenu;
 
 	HINSTANCE m_hInstance;
-	int m_nCmdShow;
 
 private:
 	void MainLoop();
@@ -28,6 +28,7 @@ public:
 	CCursor* GetCursor() const { return m_pCursor; } 
 	CKeyboard* GetKeyboard() const { return m_pKeyboard; }
 	CSettings* GetSettings() const { return m_pSettings; }
+	CMenu* GetMenu() const { return m_pMenu; }
 	HINSTANCE GetHInstance() const { return m_hInstance; }
 
 	static CClient* Get() { return s_pInst; }

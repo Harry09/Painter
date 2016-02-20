@@ -35,6 +35,7 @@ class CMath;
 class CVarGet;
 
 class CSettings;
+class CMenu;
 
 class CColorPicker;
 class CFileBrowser;

@@ -5,6 +5,7 @@
 #include "Cursor.h"
 #include "Keyboard.h"
 #include "Settings.h"
+#include "Menu.h"
 
 CClient* CClient::s_pInst;
 
@@ -20,6 +21,11 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	m_pRenderer = new CRenderer(m_pSettings->GetResolution());
 	if (!m_pRenderer->GetWindow())
 		return;
+
+	m_pSettings->CreateDlg();
+
+	m_pMenu = new CMenu();
+	m_pMenu->ShowWindow();
 
 	m_pImageMgr = new CImageMgr();
 	
@@ -42,6 +48,7 @@ CClient::~CClient()
 	delete m_pKeyboard;
 	delete m_pImageMgr;
 	delete m_pRenderer;
+	delete m_pMenu;
 	delete m_pSettings;
 }
 

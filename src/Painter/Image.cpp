@@ -46,26 +46,13 @@ CImage::~CImage()
 
 void CImage::Pulse()
 {
-	// Czyszczenie ekranu
-	if (CClient::Get()->GetKeyboard()->GetKey() == GLFW_KEY_C &&
-		CClient::Get()->GetKeyboard()->GetStatus() == GLFW_PRESS)
-	{
-		if (MessageBoxA(0, "Do you want to clear a screen?", "SRSLY?", MB_YESNO | MB_ICONQUESTION) == IDYES)
-		{
-			for (int x = 0; x < m_sizeImage.x; ++x)
-				for (int y = 0; y < m_sizeImage.y; ++y)
-					m_pImage[x][y].m_color = m_byBgColor;
-
-			printf("Screen clean.\n");
-		}
-	}
-
 	float scroll = CClient::Get()->GetCursor()->GetScroll();
 
 	if ((CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_ALT) || CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_ALT)) && scroll)
 	{
 		if (m_fMarkerSize <= 0.5f && scroll < 0) 
 			return;
+
 		m_fMarkerSize += scroll / 2;
 	}	
 	else
@@ -91,7 +78,7 @@ void CImage::Pulse()
 	}
 	else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
-		SetPixel(CClient::Get()->GetCursor()->GetPos(), glm::vec3(rand() % 255, rand() % 255, rand() % 255));
+		SetPixel(CClient::Get()->GetCursor()->GetPos(), m_byMColor);
 	}
 	else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT)) 
 	{
@@ -144,8 +131,8 @@ void CImage::SetPixel(glm::vec2 _pos, glm::vec3 _color, bool scaling)
 		{
 			for (int y = 0; y < m_sizeImage.y; ++y)
 			{
-				if (CMath::inRange(_pos.x, (x - 1 * m_fMarkerSize) * m_fScale, ( x + 1 * m_fMarkerSize) * m_fScale) &&
-					CMath::inRange(_pos.y, (y - 1 * m_fMarkerSize) * m_fScale, ( y + 1 * m_fMarkerSize) * m_fScale))
+				if (CMath::inRange(_pos.x, (x - m_fMarkerSize) * m_fScale, ( x + m_fMarkerSize) * m_fScale) &&
+					CMath::inRange(_pos.y, (y - m_fMarkerSize) * m_fScale, ( y + m_fMarkerSize) * m_fScale))
 				{
 					m_pImage[x][y].m_color = _color;
 				}
@@ -160,14 +147,27 @@ void CImage::SetPixel(glm::vec2 _pos, glm::vec3 _color, bool scaling)
 
 void CImage::SetBgColor(cvec3 _bgColor)
 {
-	m_byBgColor = _bgColor;
-
 	for (int x = 0; x < m_sizeImage.x; ++x)
 	{
 		for (int y = 0; y < m_sizeImage.y; ++y)
 		{
-			m_pImage[x][y].m_color = m_byBgColor;
+			if (m_pImage[x][y].m_color == m_byBgColor)
+				m_pImage[x][y].m_color = _bgColor;
 		}
+	}
+
+	m_byBgColor = _bgColor;
+}
+
+void CImage::ClearScreen()
+{
+	if (MessageBoxA(0, "Do you want to clear a screen?", "SRSLY?", MB_YESNO | MB_ICONQUESTION) == IDYES)
+	{
+		for (int x = 0; x < m_sizeImage.x; ++x)
+			for (int y = 0; y < m_sizeImage.y; ++y)
+				m_pImage[x][y].m_color = m_byBgColor;
+
+		printf("Screen clean\n");
 	}
 }
 
