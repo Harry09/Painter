@@ -4,6 +4,7 @@
 #include "ImageMgr.h"
 #include "Cursor.h"
 #include "Keyboard.h"
+#include "Settings.h"
 
 CClient* CClient::s_pInst;
 
@@ -14,7 +15,9 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 
 	s_pInst = this;
 
-	m_pRenderer = new CRenderer(glm::vec2(800, 600));
+	m_pSettings = new CSettings();
+
+	m_pRenderer = new CRenderer(m_pSettings->GetResolution());
 	if (!m_pRenderer->GetWindow())
 		return;
 
@@ -28,7 +31,7 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	m_pCursor = new CCursor();
 	m_pKeyboard = new CKeyboard();
 
-	printf("CClient initialized! (%d milisec)\n", GetTickCount() - ulStart);
+	printf("CClient initialized! (%d ms)\n", GetTickCount() - ulStart);
 
 	CClient::MainLoop();
 }
@@ -39,6 +42,7 @@ CClient::~CClient()
 	delete m_pKeyboard;
 	delete m_pImageMgr;
 	delete m_pRenderer;
+	delete m_pSettings;
 }
 
 void CClient::MainLoop()

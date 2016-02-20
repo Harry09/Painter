@@ -11,6 +11,7 @@ private:
 	CImageMgr* m_pImageMgr;
 	CCursor* m_pCursor;
 	CKeyboard* m_pKeyboard;
+	CSettings* m_pSettings;
 
 	HINSTANCE m_hInstance;
 	int m_nCmdShow;
@@ -26,6 +27,7 @@ public:
 	CImageMgr* GetImgMgr() const { return m_pImageMgr; }
 	CCursor* GetCursor() const { return m_pCursor; } 
 	CKeyboard* GetKeyboard() const { return m_pKeyboard; }
+	CSettings* GetSettings() const { return m_pSettings; }
 	HINSTANCE GetHInstance() const { return m_hInstance; }
 
 	static CClient* Get() { return s_pInst; }
