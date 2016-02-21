@@ -7,7 +7,8 @@
 #include "ColorPicker.h"
 #include "FileBrowser.h"
 #include "Settings.h"
-
+#include "Help.h"
+#include "NewImage.h"
 
 HWND CMenu::s_hWnd;
 
@@ -82,10 +83,6 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					CClient::Get()->GetImgMgr()->GetImage()->SetBgColor(cpicker.GetRGB());
 				}
 			} break;
-			case IDC_SETTINGS:
-			{
-				CClient::Get()->GetSettings()->ShowWindow();
-			} break;
 			case IDC_ISAVE:
 			{
 				CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
@@ -123,9 +120,28 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					CClient::Get()->GetImgMgr()->Load(_fileName);
 				}
 			} break;
+			case IDC_INEW:
+			{
+				CNewImage newimage;
+					
+				if (newimage.Accepted())
+					CClient::Get()->GetImgMgr()->CreateImage(newimage.GetSize(), newimage.GetBgColor());
+			} break;
 			case IDC_ICLEAR:
 			{
 				CClient::Get()->GetImgMgr()->GetImage()->ClearScreen();
+			} break;
+			case IDC_RESETVIEW:
+			{
+				CClient::Get()->GetImgMgr()->GetImage()->ResetView();
+			} break;
+			case IDC_SETTINGS:
+			{
+				CClient::Get()->GetSettings()->ShowWindow();
+			} break;
+			case IDC_SHOWHELP:
+			{
+				CHelp help;
 			} break;
 		}
 	} break;

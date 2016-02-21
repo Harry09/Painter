@@ -36,6 +36,8 @@ class CVarGet;
 
 class CSettings;
 class CMenu;
+class CHelp;
+class CNewImage;
 
 class CColorPicker;
 class CFileBrowser;

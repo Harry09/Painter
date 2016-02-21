@@ -162,7 +162,9 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="NewImage.cpp" />
     <ClCompile Include="FileBrowser.cpp" />
+    <ClCompile Include="Help.cpp" />
     <ClCompile Include="ImageMgr.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -181,7 +183,9 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="Cursor.h" />
+    <ClInclude Include="NewImage.h" />
     <ClInclude Include="FileBrowser.h" />
+    <ClInclude Include="Help.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageMgr.h" />
     <ClInclude Include="Keyboard.h" />
@@ -194,6 +198,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
