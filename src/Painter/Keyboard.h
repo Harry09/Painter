@@ -5,8 +5,9 @@
 class CKeyboard
 {
 private:
-	short m_iKey;
-	char m_iStatus;
+	static short m_iKey;
+	static char m_iStatus;
+	static char m_iMode;
 
 public:
 	CKeyboard();
@@ -14,11 +15,9 @@ public:
 
 	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-	void SetKey(short _key) { m_iKey = _key; }
-	void SetStatus(char _status) { m_iStatus = _status; }
-
 	short GetKey() { return m_iKey; }
 	char GetStatus() { return m_iStatus; }
+	char GetMode() { return m_iMode; }
 
 	bool isPressed(int _button) { return m_iStatus == GLFW_PRESS && m_iKey == _button; }
 	bool isReleased(int _button) { return m_iStatus == GLFW_RELEASE && m_iKey == _button; }

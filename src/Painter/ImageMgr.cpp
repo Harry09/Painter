@@ -31,7 +31,7 @@ void CImageMgr::Pulse()
 	if (m_pImage)
 		m_pImage->Pulse();
 
-	if (CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_S))
+	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_S))
 	{
 		CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
 
@@ -51,7 +51,7 @@ void CImageMgr::Pulse()
 		}
 	}
 
-	if (CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_L))
+	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_O))
 	{
 		CFileBrowser browser(DIALOG_OPEN, L"PK Image (*.pk)\0*.pk\0");
 
@@ -67,16 +67,6 @@ void CImageMgr::Pulse()
 			}
 
 			Load(_fileName);
-		}
-	}
-
-	if (CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_K))
-	{
-		CColorPicker colorPicker;
-
-		if (colorPicker.Accepted())
-		{
-			m_pImage->SetBgColor(colorPicker.GetRGB());
 		}
 	}
 }
