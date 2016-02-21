@@ -173,6 +173,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\glfw\glfw.vcxproj">
@@ -195,6 +196,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="View.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

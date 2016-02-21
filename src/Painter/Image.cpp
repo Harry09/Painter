@@ -5,6 +5,9 @@
 #include "Math.h"
 #include "Keyboard.h"
 #include "Cursor.h"
+#include "View.h"
+#include "Menu.h"
+
 
 #include <string>
 
@@ -29,7 +32,6 @@ CImage::CImage(glm::ivec2 _size, cvec3 _bgColor)
 
 	srand(time(NULL));
 
-	m_fScale = 2;
 	m_fMarkerSize = 1;
 	m_bRenderMarker = true;
 
@@ -50,95 +52,96 @@ void CImage::Pulse()
 
 	if ((CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_ALT) || CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_ALT)) && scroll)
 	{
-		if (m_fMarkerSize <= 0.5f && scroll < 0) 
+		if (m_fMarkerSize <= 0.5f && scroll < 0)
 			return;
 
 		m_fMarkerSize += scroll / 2;
-	}	
+	}
 	else
-		Zoom(scroll);
+		CClient::Get()->GetView()->SetScale(scroll);
 
-	if ((CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
-		&& CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_SHIFT))
-	{
+	if (CClient::Get()->GetView()->isMoving())
 		m_bRenderMarker = false;
-
-		m_iMoving = -m_iOffset + CClient::Get()->GetCursor()->GetPos();
-	}
-	else if ((CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT)) 
-		&& CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
-	{
-		m_iOffset = -m_iMoving + CClient::Get()->GetCursor()->GetPos();
-	}
-	else if ((CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_RIGHT)) 
-		&& CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
-	{
-		m_iMoving = -m_iOffset + CClient::Get()->GetCursor()->GetPos();
-	}
-	else if ((CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_RIGHT))
-		&& CClient::Get()->GetKeyboard()->isReleased(GLFW_KEY_LEFT_SHIFT))
+	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWPIXEL)
 	{
 		m_bRenderMarker = true;
+
+		if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			SetPixel(CClient::Get()->GetCursor()->GetPos(), m_byMColor);
+		}
+		else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
+		{
+			SetPixel(CClient::Get()->GetCursor()->GetPos(), m_byBgColor);
+		}
 	}
-	else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE)
 	{
-		SetPixel(CClient::Get()->GetCursor()->GetPos(), m_byMColor);
+		// soon
 	}
-	else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT)) 
+	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWQUAD)
 	{
-		SetPixel(CClient::Get()->GetCursor()->GetPos(), m_byBgColor);
+		// soon
+	}
+	else
+	{
+		m_bRenderMarker = false;
 	}
 }
 
+
 void CImage::Render()
 {
-	// T³o
-	CClient::Get()->GetRenderer()->RenderRGBQuad(m_iOffset, glm::vec2(m_sizeImage.x * m_fScale, m_sizeImage.y * m_fScale), m_byBgColor);
+	glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
+	float _scale = CClient::Get()->GetView()->GetScale();
 
-	// Piksele
+	// Background
+	CClient::Get()->GetRenderer()->RenderRGBQuad(_offset, glm::vec2(m_sizeImage.x * _scale, m_sizeImage.y * _scale), m_byBgColor);
+
+	// Pixels
 	for (int x = 0; x < m_sizeImage.x; ++x)
 	{
 		for (int y = 0; y < m_sizeImage.y; ++y)
 		{
 			glm::vec2 _winSize = CClient::Get()->GetRenderer()->GetWindowSize();
 
-			if (x * m_fScale < _winSize.x - m_iOffset.x && y * m_fScale < _winSize.y - m_iOffset.y && m_pImage[x][y].m_color != m_byBgColor)
-				CClient::Get()->GetRenderer()->RenderRGBQuad(glm::ivec2(x * m_fScale, y * m_fScale) + m_iOffset, glm::vec2(m_fScale, m_fScale), m_pImage[x][y].m_color);
+			if (x * _scale < _winSize.x - _offset.x && y * _scale < _winSize.y - _offset.y && m_pImage[x][y].m_color != m_byBgColor)
+				CClient::Get()->GetRenderer()->RenderRGBQuad(glm::ivec2(x * _scale, y * _scale) + _offset, glm::vec2(_scale, _scale), m_pImage[x][y].m_color);
 		}
 	}
 
-	// WskaŸnik
+	// Pointer to markert :D
 	if (m_bRenderMarker)
 	{
 		CClient::Get()->GetRenderer()->RenderRGBQuad(
-			glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize*m_fScale,
-				CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize*m_fScale),
-			glm::vec2(m_fMarkerSize * m_fScale * 2,
-				m_fMarkerSize * m_fScale * 2),
-			m_byBgColor == cvec3(0, 0, 0) ? cvec3(255, 255, 255) : cvec3(0, 0, 0),
-			5);
+			glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize*_scale,
+				CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize*_scale),
+			glm::vec2(m_fMarkerSize * _scale * 2,
+				m_fMarkerSize * _scale * 2),
+			m_byMColor);
 	}
-}
-
-void CImage::Zoom(float y)
-{
-	m_fScale += y/10 * m_fScale;
 }
 
 void CImage::SetPixel(glm::vec2 _pos, glm::vec3 _color, bool scaling)
 {
 	if (scaling)
 	{
-		_pos -= m_iOffset;
+		glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
+		float _scale = CClient::Get()->GetView()->GetScale();
+
+		_pos -= _offset;
 
 		for (int x = 0; x < m_sizeImage.x; ++x)
 		{
 			for (int y = 0; y < m_sizeImage.y; ++y)
 			{
-				if (CMath::inRange(_pos.x, (x - m_fMarkerSize) * m_fScale, ( x + m_fMarkerSize) * m_fScale) &&
-					CMath::inRange(_pos.y, (y - m_fMarkerSize) * m_fScale, ( y + m_fMarkerSize) * m_fScale))
+				if (CMath::inRange(_pos.x, (x - 0.5 - m_fMarkerSize) * _scale, ( x - 0.5 + m_fMarkerSize) * _scale) &&
+					CMath::inRange(_pos.y, (y - 0.5 - m_fMarkerSize) * _scale, ( y - 0.5 + m_fMarkerSize) * _scale))
 				{
-					m_pImage[x][y].m_color = _color;
+					if ((x - 1) < 0 || (y - 1) < 0)
+						return;
+				
+					m_pImage[x-1][y-1].m_color = _color;
 				}
 			}
 		}

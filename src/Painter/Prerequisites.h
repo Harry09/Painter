@@ -24,15 +24,13 @@
 // Twórcy na to nie wpadli
 typedef glm::highp_cvec3 cvec3;
 
-
 class CClient;
 class CRenderer;
+class CView;
 class CImageMgr;
 class CImage;
 class CCursor;
 class CKeyboard;
-class CMath;
-class CVarGet;
 
 class CSettings;
 class CMenu;

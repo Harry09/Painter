@@ -8,6 +8,7 @@ private:
 	static CClient* s_pInst;
 
 	CRenderer* m_pRenderer;
+	CView* m_pView;
 	CImageMgr* m_pImageMgr;
 	CCursor* m_pCursor;
 	CKeyboard* m_pKeyboard;
@@ -24,6 +25,7 @@ public:
 	~CClient();
 
 	CRenderer* GetRenderer() const { return m_pRenderer; }
+	CView* GetView() const { return m_pView; }
 	CImageMgr* GetImgMgr() const { return m_pImageMgr; }
 	CCursor* GetCursor() const { return m_pCursor; } 
 	CKeyboard* GetKeyboard() const { return m_pKeyboard; }

@@ -9,8 +9,12 @@
 #include "Settings.h"
 #include "Help.h"
 #include "NewImage.h"
+#include "View.h"
 
 HWND CMenu::s_hWnd;
+
+char CMenu::m_sMode[3][11] = { "Draw Line", "Draw Quad", "Draw Pixel" };
+char CMenu::m_iMode;
 
 CMenu::CMenu()
 {
@@ -133,7 +137,17 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 			} break;
 			case IDC_RESETVIEW:
 			{
-				CClient::Get()->GetImgMgr()->GetImage()->ResetView();
+				CClient::Get()->GetView()->ResetView();
+			} break;
+			case IDC_DRAWINGMODE:
+			{
+				SetWindowTextA(GetDlgItem(hwndDlg, IDC_DRAWINGMODE), m_sMode[m_iMode]);
+				
+				m_iMode++;
+				
+				if (m_iMode > 2)
+					m_iMode = 0;
+
 			} break;
 			case IDC_SETTINGS:
 			{

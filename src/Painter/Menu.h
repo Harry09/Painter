@@ -2,10 +2,20 @@
 
 #include "Prerequisites.h"
 
+enum ModeDrawing
+{
+	ID_DRAWPIXEL = 0,
+	ID_DRAWLINE,
+	ID_DRAWQUAD
+};
+
 class CMenu
 {
 private:
 	static HWND s_hWnd;
+
+	static char m_sMode[3][11];
+	static char m_iMode; // @ ModeDrawing
 
 private:
 	static DWORD WINAPI Window(LPVOID);
@@ -16,4 +26,5 @@ public:
 	~CMenu();
 
 	void ShowWindow();
+	ModeDrawing GetModeDrawing() { return (ModeDrawing)m_iMode; }
 };

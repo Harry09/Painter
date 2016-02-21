@@ -1,6 +1,7 @@
 #include "Client.h"
 
 #include "Renderer.h"
+#include "View.h"
 #include "ImageMgr.h"
 #include "Cursor.h"
 #include "Keyboard.h"
@@ -24,6 +25,8 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 
 	m_pMenu = new CMenu();
 	m_pMenu->ShowWindow();
+
+	m_pView = new CView();
 
 	m_pImageMgr = new CImageMgr();
 	
@@ -57,6 +60,8 @@ void CClient::MainLoop()
 	while (!glfwWindowShouldClose(m_pRenderer->GetWindow()))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		m_pView->Pulse();
 
 		m_pImageMgr->Pulse();
 		m_pImageMgr->Render();
