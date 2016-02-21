@@ -46,5 +46,12 @@ public:
 	cvec3 GetMColor() { return m_byMColor; }
 
 	void ClearScreen();
+
+	void ResetView()
+	{
+		m_fScale = 2;
+		m_iMoving = glm::ivec2(0, 0);
+		m_iOffset = glm::ivec2(0, 0);
+	}
 };
 

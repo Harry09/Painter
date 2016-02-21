@@ -22,8 +22,6 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	if (!m_pRenderer->GetWindow())
 		return;
 
-	m_pSettings->CreateDlg();
-
 	m_pMenu = new CMenu();
 	m_pMenu->ShowWindow();
 

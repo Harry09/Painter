@@ -58,21 +58,25 @@ void CImage::Pulse()
 	else
 		Zoom(scroll);
 
-	if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) && CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_SHIFT))
+	if ((CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+		&& CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bRenderMarker = false;
 
 		m_iMoving = -m_iOffset + CClient::Get()->GetCursor()->GetPos();
 	}
-	else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) && CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
+	else if ((CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT)) 
+		&& CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_iOffset = -m_iMoving + CClient::Get()->GetCursor()->GetPos();
 	}
-	else if (CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) && CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
+	else if ((CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_RIGHT)) 
+		&& CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_iMoving = -m_iOffset + CClient::Get()->GetCursor()->GetPos();
 	}
-	else if (CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) && CClient::Get()->GetKeyboard()->isReleased(GLFW_KEY_LEFT_SHIFT))
+	else if ((CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_RIGHT))
+		&& CClient::Get()->GetKeyboard()->isReleased(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bRenderMarker = true;
 	}
@@ -161,7 +165,7 @@ void CImage::SetBgColor(cvec3 _bgColor)
 
 void CImage::ClearScreen()
 {
-	if (MessageBoxA(0, "Do you want to clear a screen?", "SRSLY?", MB_YESNO | MB_ICONQUESTION) == IDYES)
+	if (MessageBoxA(0, "Are you sure that you want to clean screen?", "SRSLY?", MB_YESNO | MB_ICONQUESTION) == IDYES)
 	{
 		for (int x = 0; x < m_sizeImage.x; ++x)
 			for (int y = 0; y < m_sizeImage.y; ++y)
@@ -170,4 +174,3 @@ void CImage::ClearScreen()
 		printf("Screen clean\n");
 	}
 }
-

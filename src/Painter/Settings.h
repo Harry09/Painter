@@ -20,7 +20,5 @@ public:
 	void Save(bool getDlgValue = true);
 	void Load();
 
-	void CreateDlg();
-
 	glm::ivec2 GetResolution() { return m_iResolution; }
 };
