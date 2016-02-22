@@ -57,108 +57,111 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 {
 	switch (uMsg)
 	{
-	case WM_CLOSE:
-		DestroyWindow(CClient::Get()->GetRenderer()->GetHWnd());
-		break;
+		case WM_CLOSE:
+			DestroyWindow(CClient::Get()->GetRenderer()->GetHWnd());
+			break;
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
 
-	case WM_COMMAND:
-	{
-		switch (wParam)
+		case WM_COMMAND:
 		{
-			case IDC_MCOLOR:
+			switch (wParam)
 			{
-				CColorPicker cpicker;
-
-				if (cpicker.Accepted())
+				case IDC_MCOLOR:
 				{
-					CClient::Get()->GetImgMgr()->GetImage()->SetMColor(cpicker.GetRGB());
-				}
-			} break;
-			case IDC_BGCOLOR:
-			{
-				CColorPicker cpicker;
+					CColorPicker cpicker;
 
-				if (cpicker.Accepted())
-				{
-					CClient::Get()->GetImgMgr()->GetImage()->SetBgColor(cpicker.GetRGB());
-				}
-			} break;
-			case IDC_ISAVE:
-			{
-				CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
-
-				if (browser.Accepted())
-				{
-					wchar_t _fileName[MAX_PATH] = { 0 };
-					wcscpy(_fileName, browser.GetFileName());
-					int _lenFN = wcslen(_fileName);
-
-					if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
+					if (cpicker.Accepted())
 					{
-
-						wcscat(_fileName, L".pk");
+						CClient::Get()->GetImgMgr()->GetImage()->SetMColor(cpicker.GetRGB());
 					}
-
-					CClient::Get()->GetImgMgr()->Save(_fileName);
-				}
-			} break;
-			case IDC_ILOAD:
-			{
-				CFileBrowser browser(DIALOG_OPEN, L"PK Image (*.pk)\0*.pk\0");
-
-				if (browser.Accepted())
+				} break;
+				case IDC_BGCOLOR:
 				{
-					wchar_t _fileName[MAX_PATH] = { 0 };
-					wcscpy(_fileName, browser.GetFileName());
-					int _lenFN = wcslen(_fileName);
+					CColorPicker cpicker;
 
-					if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
+					if (cpicker.Accepted())
 					{
-						wcscat(_fileName, L".pk");
+						CClient::Get()->GetImgMgr()->GetImage()->SetBgColor(cpicker.GetRGB());
 					}
+				} break;
+				case IDC_ISAVE:
+				{
+					CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
 
-					CClient::Get()->GetImgMgr()->Load(_fileName);
-				}
-			} break;
-			case IDC_INEW:
-			{
-				CNewImage newimage;
+					if (browser.Accepted())
+					{
+						wchar_t _fileName[MAX_PATH] = { 0 };
+						wcscpy(_fileName, browser.GetFileName());
+						int _lenFN = wcslen(_fileName);
+
+						if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
+						{
+
+							wcscat(_fileName, L".pk");
+						}
+
+						CClient::Get()->GetImgMgr()->Save(_fileName);
+					}
+				} break;
+				case IDC_ILOAD:
+				{
+					CFileBrowser browser(DIALOG_OPEN, L"PK Image (*.pk)\0*.pk\0");
+
+					if (browser.Accepted())
+					{
+						wchar_t _fileName[MAX_PATH] = { 0 };
+						wcscpy(_fileName, browser.GetFileName());
+						int _lenFN = wcslen(_fileName);
+
+						if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
+						{
+							wcscat(_fileName, L".pk");
+						}
+
+						CClient::Get()->GetImgMgr()->Load(_fileName);
+					}
+				} break;
+				case IDC_INEW:
+				{
+					CNewImage newimage;
 					
-				if (newimage.Accepted())
-					CClient::Get()->GetImgMgr()->CreateImage(newimage.GetSize(), newimage.GetBgColor());
-			} break;
-			case IDC_ICLEAR:
-			{
-				CClient::Get()->GetImgMgr()->GetImage()->ClearScreen();
-			} break;
-			case IDC_RESETVIEW:
-			{
-				CClient::Get()->GetView()->ResetView();
-			} break;
-			case IDC_DRAWINGMODE:
-			{
-				SetWindowTextA(GetDlgItem(hwndDlg, IDC_DRAWINGMODE), m_sMode[m_iMode]);
+					if (newimage.Accepted())
+						CClient::Get()->GetImgMgr()->CreateImage(newimage.GetSize(), newimage.GetBgColor());
+				} break;
+				case IDC_ICLEAR:
+				{
+					CClient::Get()->GetImgMgr()->GetImage()->ClearScreen();
+				} break;
+				case IDC_RESETVIEW:
+				{
+					CClient::Get()->GetView()->ResetView();
+				} break;
+				case IDC_DRAWINGMODE:
+				{
+					SetWindowTextA(GetDlgItem(hwndDlg, IDC_DRAWINGMODE), m_sMode[m_iMode]);
 				
-				m_iMode++;
+					m_iMode++;
 				
-				if (m_iMode > 2)
-					m_iMode = 0;
+					if (m_iMode > 2)
+						m_iMode = 0;
 
-			} break;
-			case IDC_SETTINGS:
-			{
-				CClient::Get()->GetSettings()->ShowWindow();
-			} break;
-			case IDC_SHOWHELP:
-			{
-				CHelp help;
-			} break;
-		}
-	} break;
+				} break;
+				case IDC_SETTINGS:
+				{
+					CClient::Get()->GetSettings()->ShowWindow();
+				} break;
+				case IDC_SHOWHELP:
+				{
+					CHelp help;
+				} break;
+			}
+
+			// Auto focus
+			SetFocus(CClient::Get()->GetRenderer()->GetHWnd());
+		} break;
 	}
 
 	return 0;

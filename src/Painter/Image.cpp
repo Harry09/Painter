@@ -7,9 +7,7 @@
 #include "Cursor.h"
 #include "View.h"
 #include "Menu.h"
-
-
-#include <string>
+#include "Math.h"
 
 
 CImage::CImage(glm::ivec2 _size, cvec3 _bgColor)
@@ -77,7 +75,38 @@ void CImage::Pulse()
 	}
 	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE)
 	{
-		// soon
+		if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			m_bRenderMarker = true;
+			m_inClick++;
+
+			if (m_inClick == 1)
+			{
+				m_fPos1 = CClient::Get()->GetCursor()->GetPos();
+				m_inClick = 2;
+			}
+			else if (m_inClick == 3)
+			{
+				float dir = CMath::PointDir(m_fPos1, m_fPos2);
+				float len = CMath::GetLen(m_fPos1, m_fPos2);
+
+				float angle = 2 * M_PI * dir / 360;
+
+
+				for (int i = 0; i < len; ++i)
+				{
+					SetPixel(glm::vec2(cos(angle) * i + m_fPos1.x, sin(angle) * i + m_fPos1.y), m_byMColor);
+				}
+
+				m_inClick = 0;
+			}
+
+		}
+
+		if (m_inClick == 2)
+		{
+			m_fPos2 = CClient::Get()->GetCursor()->GetPos();
+		}
 	}
 	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWQUAD)
 	{
@@ -95,8 +124,10 @@ void CImage::Render()
 	glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
 	float _scale = CClient::Get()->GetView()->GetScale();
 
+	//glScalef(zoom,zoom,zoom);
+
 	// Background
-	CClient::Get()->GetRenderer()->RenderRGBQuad(_offset, glm::vec2(m_sizeImage.x * _scale, m_sizeImage.y * _scale), m_byBgColor);
+	CClient::Get()->GetRenderer()->RenderRGBQuad(_offset, glm::vec2((m_sizeImage.x - 2) * _scale, (m_sizeImage.y - 2) * _scale), m_byBgColor);
 
 	// Pixels
 	for (int x = 0; x < m_sizeImage.x; ++x)
@@ -110,15 +141,20 @@ void CImage::Render()
 		}
 	}
 
-	// Pointer to markert :D
+	// Pointer to marker
 	if (m_bRenderMarker)
 	{
-		CClient::Get()->GetRenderer()->RenderRGBQuad(
-			glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize*_scale,
-				CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize*_scale),
-			glm::vec2(m_fMarkerSize * _scale * 2,
-				m_fMarkerSize * _scale * 2),
-			m_byMColor);
+		if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWPIXEL)
+		{
+			CClient::Get()->GetRenderer()->RenderRGBQuad(
+				glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize*_scale,
+					CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize*_scale),
+				glm::vec2(m_fMarkerSize * _scale * 2,
+					m_fMarkerSize * _scale * 2),
+				m_byMColor);
+		}
+		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE && m_inClick == 2)
+			CClient::Get()->GetRenderer()->RenderLine(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize*5);
 	}
 }
 
