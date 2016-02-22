@@ -20,3 +20,18 @@ glm::vec2 CMath::LengthDir(float len, float dir)
 
 	return _pos;
 }
+
+float CMath::GetLen(glm::vec2 pos1, glm::vec2 pos2)
+{
+	float len = 0.f;
+
+	float cx = 0.f, cy = 0.f;
+
+	cx = pos2.x - pos1.x;
+	cy = pos2.y - pos1.y;
+
+	len = sqrt(cx*cx + cy*cy);
+
+	return len;
+}
+
