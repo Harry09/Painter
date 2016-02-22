@@ -31,7 +31,7 @@ void CImageMgr::Pulse()
 	if (m_pImage)
 		m_pImage->Pulse();
 
-	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_S))
+	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed('S'))
 	{
 		CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
 
@@ -51,7 +51,7 @@ void CImageMgr::Pulse()
 		}
 	}
 
-	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_O))
+	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed('O'))
 	{
 		CFileBrowser browser(DIALOG_OPEN, L"PK Image (*.pk)\0*.pk\0");
 

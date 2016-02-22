@@ -49,6 +49,40 @@ void CRenderer::RenderRGBQuad(glm::vec2 _pos, glm::vec2 _size, cvec3 _color, flo
 	glPopMatrix();
 }
 
+void CRenderer::RenderRGBQuadByPos(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _color, float width)
+{
+	if (!m_pWindow)
+		return;
+
+	glPushMatrix();
+
+	glColor3ub(_color.r, _color.g, _color.b);
+
+	if (width)
+	{
+		glLineWidth(width);
+
+		glBegin(GL_LINE_LOOP);
+		glVertex2f(_pos1.x, _pos1.y);
+		glVertex2f(_pos2.x, _pos1.y);
+		glVertex2f(_pos2.x, _pos2.y);
+		glVertex2f(_pos1.x, _pos2.y);
+		glEnd();
+	}
+	else
+	{
+		glBegin(GL_QUADS);
+		glVertex2f(_pos1.x, _pos1.y);
+		glVertex2f(_pos2.x, _pos1.y);
+		glVertex2f(_pos2.x, _pos2.y);
+		glVertex2f(_pos1.x, _pos2.y);
+		glEnd();
+	}
+
+	glPopMatrix();
+
+}
+
 void CRenderer::RenderLine(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _color, float width)
 {
 	glPushMatrix();

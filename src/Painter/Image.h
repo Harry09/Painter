@@ -20,7 +20,7 @@ private:
 	cvec3 m_byMColor; // @ Marker Color
 	cvec3 m_byBgColor; // @ Background Color
 
-	// Line
+	// Line and Quad
 	glm::vec2 m_fPos1;
 	glm::vec2 m_fPos2;
 	char m_inClick; // int (one byte) number Click

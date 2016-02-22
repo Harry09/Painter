@@ -97,6 +97,9 @@ void CImage::Pulse()
 					SetPixel(glm::vec2(cos(angle) * i + m_fPos1.x, sin(angle) * i + m_fPos1.y), m_byMColor);
 				}
 
+				m_fPos1 = glm::ivec2(0, 0);
+				m_fPos2 = glm::ivec2(0, 0);
+
 				m_inClick = 0;
 			}
 		}
@@ -110,7 +113,69 @@ void CImage::Pulse()
 	}
 	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWQUAD)
 	{
-		// soon
+		if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			m_bRenderMarker = true;
+			m_inClick++;
+
+			if (m_inClick == 1)
+			{
+				m_fPos1 = CClient::Get()->GetCursor()->GetPos();
+				m_inClick = 2;
+			}
+			else if (m_inClick == 3)
+			{
+				float cx = 0.f, cy = 0.f;
+
+				cx = m_fPos2.x - m_fPos1.x;
+				cy = m_fPos2.y - m_fPos1.y;
+
+				// Top And Button
+				if (cx > 0)
+				{
+					for (int x = 0; x < cx; ++x)
+						SetPixel(glm::vec2(m_fPos1.x + float(x), m_fPos1.y), m_byMColor);
+					for (int x = 0; x < cx; ++x)
+						SetPixel(glm::vec2(m_fPos1.x + float(x), m_fPos2.y), m_byMColor);				
+				}
+				if (cx < 0)
+				{
+					for (int x = 0; x < -cx; ++x)
+						SetPixel(glm::vec2(m_fPos1.x + float(-x), m_fPos2.y), m_byMColor);
+					
+					for (int x = 0; x < -cx; ++x)
+						SetPixel(glm::vec2(m_fPos1.x + float(-x), m_fPos1.y), m_byMColor);
+				}
+
+				// Left and Right
+				if (cy > 0)
+				{
+					for (int y = 0; y < cy; ++y)
+						SetPixel(glm::vec2(m_fPos1.x, m_fPos1.y + float(y)), m_byMColor);
+					for (int y = 0; y < cy; ++y)
+						SetPixel(glm::vec2(m_fPos2.x, m_fPos1.y + float(y)), m_byMColor);
+				}
+				else if (cy < 0)
+				{
+					for (int y = 0; y < -cy; ++y)
+						SetPixel(glm::vec2(m_fPos1.x, m_fPos1.y + float(-y)), m_byMColor);
+					for (int y = 0; y < -cy; ++y)
+						SetPixel(glm::vec2(m_fPos2.x, m_fPos1.y + float(-y)), m_byMColor);
+				}
+
+				m_fPos1 = glm::ivec2(0, 0);
+				m_fPos2 = glm::ivec2(0, 0);
+
+				m_inClick = 0;
+			}
+		}
+		else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
+			m_inClick = 0;
+
+		if (m_inClick == 2)
+		{
+			m_fPos2 = CClient::Get()->GetCursor()->GetPos();
+		}
 	}
 	else
 	{
@@ -153,8 +218,10 @@ void CImage::Render()
 					m_fMarkerSize * _scale * 2),
 				m_byMColor);
 		}
-		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE && m_inClick == 2)
+		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE && m_inClick == 2) // Line
 			CClient::Get()->GetRenderer()->RenderLine(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize*5);
+		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWQUAD && m_inClick == 2) // Quad
+			CClient::Get()->GetRenderer()->RenderRGBQuadByPos(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize*5);
 	}
 }
 
