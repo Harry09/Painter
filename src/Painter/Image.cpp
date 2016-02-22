@@ -92,7 +92,6 @@ void CImage::Pulse()
 
 				float angle = 2 * M_PI * dir / 360;
 
-
 				for (int i = 0; i < len; ++i)
 				{
 					SetPixel(glm::vec2(cos(angle) * i + m_fPos1.x, sin(angle) * i + m_fPos1.y), m_byMColor);
@@ -100,8 +99,9 @@ void CImage::Pulse()
 
 				m_inClick = 0;
 			}
-
 		}
+		else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
+			m_inClick = 0;
 
 		if (m_inClick == 2)
 		{

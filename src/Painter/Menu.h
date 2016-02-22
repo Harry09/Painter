@@ -5,8 +5,8 @@
 enum ModeDrawing
 {
 	ID_DRAWPIXEL = 0,
-	ID_DRAWLINE = 1,
-	ID_DRAWQUAD = 2
+	ID_DRAWLINE,
+	ID_DRAWQUAD
 };
 
 class CMenu
