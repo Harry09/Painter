@@ -18,6 +18,9 @@ private:
 	static char m_sMode[4][12];
 	static char m_iMode; // @ ModeDrawing
 
+public:
+	static bool m_bGetColor;
+
 private:
 	static DWORD WINAPI Window(LPVOID);
 	static int CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);

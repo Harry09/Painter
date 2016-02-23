@@ -9,6 +9,7 @@
 CView::CView()
 {
 	m_fScale = 2;
+	m_bMoving = false;
 }
 
 CView::~CView()

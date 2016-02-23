@@ -70,8 +70,21 @@ void CImage::Pulse()
 	else
 		CClient::Get()->GetView()->SetScale(scroll);
 
+
+
+
 	if (CClient::Get()->GetView()->isMoving())
 		m_bRenderMarker = false;
+	else if (CClient::Get()->GetMenu()->m_bGetColor && CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		cvec3 _color = GetColor(CClient::Get()->GetCursor()->GetPos());
+
+		printf("Color = %d %d %d\n", _color.r, _color.g, _color.b);
+
+		m_byMColor = _color;
+
+		CClient::Get()->GetMenu()->m_bGetColor = false;
+	}
 	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWPIXEL)
 	{
 		m_bRenderMarker = true;
@@ -271,6 +284,13 @@ void CImage::Render()
 				glm::vec2(m_fMarkerSize * _scale * 2,
 					m_fMarkerSize * _scale * 2),
 				m_byMColor);
+
+			CClient::Get()->GetRenderer()->RenderRGBQuad(
+				glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize * _scale,
+					CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize * _scale),
+				glm::vec2(m_fMarkerSize * _scale * 2,
+					m_fMarkerSize * _scale * 2),
+				m_byBgColor == cvec3(0, 0, 0) ? cvec3(255, 255, 255) : m_byMColor == cvec3(0, 0, 0) ? m_byBgColor == cvec3(255, 255, 255) ? cvec3(192, 192, 192) : cvec3(255,255,255) : cvec3(0, 0, 0), 3);
 		}
 		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE && m_inClick == 2) // Line
 			CClient::Get()->GetRenderer()->RenderLine(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize * 5);
@@ -341,4 +361,38 @@ void CImage::ClearScreen()
 
 		printf("Screen clean\n");
 	}
+}
+
+cvec3 CImage::GetColor(glm::vec2 _pos, bool scaling)
+{
+	cvec3 _color = cvec3(0, 0, 0);
+
+	if (scaling)
+	{
+		glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
+		float _scale = CClient::Get()->GetView()->GetScale();
+
+		_pos -= _offset;
+
+		for (int x = 0; x < m_sizeImage.x; ++x)
+		{
+			for (int y = 0; y < m_sizeImage.y; ++y)
+			{
+				if (CMath::inRange(_pos.x, (x - 1.f) * _scale, x * _scale) &&
+					CMath::inRange(_pos.y, (y - 1.f) * _scale, y * _scale))
+				{
+					if ((x - 1) < 0 || (y - 1) < 0)
+						return cvec3(255,255,255);
+
+					_color = m_pImage[x - 1][y - 1].m_color;
+				}
+			}
+		}
+	}
+	else
+	{
+		_color = m_pImage[(int)_pos.x][(int)_pos.y].m_color;
+	}
+
+	return _color;
 }

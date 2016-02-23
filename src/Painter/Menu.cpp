@@ -15,6 +15,8 @@ HWND CMenu::s_hWnd;
 
 char CMenu::m_sMode[4][12] = { "Draw Line", "Draw Quad", "Draw Circle", "Draw Pixel" };
 char CMenu::m_iMode;
+bool CMenu::m_bGetColor;
+
 
 CMenu::CMenu()
 {
@@ -148,6 +150,11 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					if (m_iMode > 3)
 						m_iMode = 0;
 
+				} break;
+				case IDC_GETCOLOR:
+				{
+					printf("Getting color...\n");
+					m_bGetColor = true;
 				} break;
 				case IDC_SETTINGS:
 				{

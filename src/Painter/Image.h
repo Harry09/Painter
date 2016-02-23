@@ -49,5 +49,7 @@ public:
 	cvec3 GetMColor() { return m_byMColor; }
 
 	void ClearScreen();
+
+	cvec3 GetColor(glm::vec2 _pos, bool scaling = true);
 };
 
