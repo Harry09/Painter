@@ -13,7 +13,7 @@
 
 HWND CMenu::s_hWnd;
 
-char CMenu::m_sMode[3][11] = { "Draw Line", "Draw Quad", "Draw Pixel" };
+char CMenu::m_sMode[4][12] = { "Draw Line", "Draw Quad", "Draw Circle", "Draw Pixel" };
 char CMenu::m_iMode;
 
 CMenu::CMenu()
@@ -145,7 +145,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 				
 					m_iMode++;
 				
-					if (m_iMode > 2)
+					if (m_iMode > 3)
 						m_iMode = 0;
 
 				} break;

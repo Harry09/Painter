@@ -33,6 +33,8 @@ CImage::CImage(glm::ivec2 _size, cvec3 _bgColor)
 	m_fMarkerSize = 1;
 	m_bRenderMarker = true;
 
+	m_fCircleRadius = 2.f;
+
 	printf("CImage initialized! Pixels = %d Size = %d KB \n", m_sizeImage.x * m_sizeImage.y, (m_sizeImage.x * m_sizeImage.y * sizeof(SPixel)) / 1024);
 }
 
@@ -50,10 +52,20 @@ void CImage::Pulse()
 
 	if ((CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_ALT) || CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_ALT)) && scroll)
 	{
-		if (m_fMarkerSize <= 0.5f && scroll < 0)
-			return;
+		if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWCIRCLE)
+		{
+			if (m_fCircleRadius <= 0.5f && scroll < 0)
+				return;
 
-		m_fMarkerSize += scroll / 2;
+			m_fCircleRadius += scroll / 2;
+		}
+		else 
+		{
+			if (m_fMarkerSize <= 0.5f && scroll < 0)
+				return;
+
+			m_fMarkerSize += scroll / 2;
+		}
 	}
 	else
 		CClient::Get()->GetView()->SetScale(scroll);
@@ -142,7 +154,6 @@ void CImage::Pulse()
 				{
 					for (int x = 0; x < -cx; ++x)
 						SetPixel(glm::vec2(m_fPos1.x + float(-x), m_fPos2.y), m_byMColor);
-					
 					for (int x = 0; x < -cx; ++x)
 						SetPixel(glm::vec2(m_fPos1.x + float(-x), m_fPos1.y), m_byMColor);
 				}
@@ -177,10 +188,53 @@ void CImage::Pulse()
 			m_fPos2 = CClient::Get()->GetCursor()->GetPos();
 		}
 	}
-	else
+	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWCIRCLE)
 	{
-		m_bRenderMarker = false;
+		m_bRenderMarker = true;
+
+		if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+		{
+			float _markerSize = m_fMarkerSize;
+			float _scale = CClient::Get()->GetView()->GetScale();
+			glm::vec2 _pos = CClient::Get()->GetCursor()->GetPos();
+
+			m_fMarkerSize = 0.7f;
+
+			for (int i = 0; i <= m_fCircleRadius * m_fCircleRadius; i++)
+			{
+				float angle = 2 * M_PI * i / (m_fCircleRadius * m_fCircleRadius);
+
+				SetPixel(
+					glm::vec2(cos(angle) * m_fCircleRadius * _scale + _pos.x,
+						sin(angle) * m_fCircleRadius * _scale + _pos.y),
+					m_byMColor);
+			}
+
+			m_fMarkerSize = _markerSize;
+		}
+		else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
+		{
+			float _markerSize = m_fMarkerSize;
+			float _scale = CClient::Get()->GetView()->GetScale();
+			glm::vec2 _pos = CClient::Get()->GetCursor()->GetPos();
+
+			m_fMarkerSize = 0.7f;
+
+			for (int i = 0; i <= m_fCircleRadius * m_fCircleRadius; i++)
+			{
+				float angle = 2 * M_PI * i / (m_fCircleRadius * m_fCircleRadius);
+
+				SetPixel(
+					glm::vec2(cos(angle) * m_fCircleRadius * _scale + _pos.x,
+						sin(angle) * m_fCircleRadius * _scale + _pos.y),
+					m_byBgColor);
+			}
+
+			m_fMarkerSize = _markerSize;
+		}
 	}
+	else
+		m_bRenderMarker = false;
 }
 
 
@@ -212,16 +266,24 @@ void CImage::Render()
 		if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWPIXEL)
 		{
 			CClient::Get()->GetRenderer()->RenderRGBQuad(
-				glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize*_scale,
-					CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize*_scale),
+				glm::vec2(CClient::Get()->GetCursor()->GetPos().x - 1 * m_fMarkerSize * _scale,
+					CClient::Get()->GetCursor()->GetPos().y - 1 * m_fMarkerSize * _scale),
 				glm::vec2(m_fMarkerSize * _scale * 2,
 					m_fMarkerSize * _scale * 2),
 				m_byMColor);
 		}
 		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWLINE && m_inClick == 2) // Line
-			CClient::Get()->GetRenderer()->RenderLine(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize*5);
+			CClient::Get()->GetRenderer()->RenderLine(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize * 5);
 		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWQUAD && m_inClick == 2) // Quad
-			CClient::Get()->GetRenderer()->RenderRGBQuadByPos(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize*5);
+			CClient::Get()->GetRenderer()->RenderRGBQuadByPos(m_fPos1, m_fPos2, m_byMColor, m_fMarkerSize * 5);
+		else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWCIRCLE) // Circle
+		{
+			CClient::Get()->GetRenderer()->RenderCircle(
+				glm::vec2(CClient::Get()->GetCursor()->GetPos().x,
+					CClient::Get()->GetCursor()->GetPos().y),
+				m_byMColor,
+				m_fCircleRadius * _scale, m_fCircleRadius * _scale);
+		}
 	}
 }
 

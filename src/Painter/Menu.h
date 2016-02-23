@@ -6,7 +6,8 @@ enum ModeDrawing
 {
 	ID_DRAWPIXEL = 0,
 	ID_DRAWLINE,
-	ID_DRAWQUAD
+	ID_DRAWQUAD,
+	ID_DRAWCIRCLE
 };
 
 class CMenu
@@ -14,7 +15,7 @@ class CMenu
 private:
 	static HWND s_hWnd;
 
-	static char m_sMode[3][11];
+	static char m_sMode[4][12];
 	static char m_iMode; // @ ModeDrawing
 
 private:

@@ -25,6 +25,9 @@ private:
 	glm::vec2 m_fPos2;
 	char m_inClick; // int (one byte) number Click
 
+	// Circle
+	float m_fCircleRadius;
+
 
 public:
 	CImage(glm::ivec2 _size, cvec3 _bgColor);
