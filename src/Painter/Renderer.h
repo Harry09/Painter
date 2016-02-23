@@ -7,8 +7,13 @@ private:
 	GLFWwindow *m_pWindow;
 	glm::ivec2 m_sizeWindow;
 
+	HWND m_hStatusBar;
+	int m_iTimeoutStatus;
+	int m_ulStartTimeout;
+
 private:
 	void InitOpenGL();
+	void InitStatusBar();
 
 public:
 	CRenderer(glm::ivec2 _size);
@@ -23,5 +28,10 @@ public:
 	GLFWwindow* GetWindow() const { return m_pWindow; }
 	glm::ivec2 GetWindowSize() const { return m_sizeWindow; }
 	HWND GetHWnd() { return glfwGetWin32Window(m_pWindow); }
+
+	void Pulse();
+
+	// Timeout in ms. (0 = never)
+	void SetText(int timeout, wchar_t* _text, ...);
 };
 

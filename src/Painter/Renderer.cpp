@@ -137,10 +137,45 @@ void CRenderer::InitOpenGL()
 
 	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 
-	HWND _hWnd = GetHWnd();
+	InitStatusBar();
 
+	HWND _hWnd = GetHWnd();
 	// Disable resizing window
 	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE)&~WS_SIZEBOX);
 	// Disable maximize window
 	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE)&~WS_MAXIMIZEBOX);
+}
+
+void CRenderer::InitStatusBar()
+{
+	INITCOMMONCONTROLSEX icc;
+	icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icc.dwICC = ICC_BAR_CLASSES;
+	InitCommonControlsEx(&icc);
+
+	m_hStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL,  WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, GetHWnd(), (HMENU)200, CClient::Get()->GetHInstance(), NULL);
+
+	int iStatusBarWidths[] = { m_sizeWindow.x, 300, -1 };
+	SendMessage(m_hStatusBar, SB_SETPARTS, 3, (LPARAM)iStatusBarWidths);
+
+	//SendMessage(m_hStatusBar, SB_SETTEXT, 0, (LPARAM)L"Ready");
+}
+
+void CRenderer::Pulse()
+{
+	if (m_iTimeoutStatus != 0 && m_iTimeoutStatus < GetTickCount() - m_ulStartTimeout)
+		SetText(0, L"Ready");
+}
+
+void CRenderer::SetText(int _timeout, wchar_t* _text, ...)
+{
+	wchar_t buffer[256];
+	va_list args;
+	va_start(args, _text);
+	vswprintf(buffer, 256, _text, args);
+	va_end(args);
+
+	m_iTimeoutStatus = _timeout;
+	m_ulStartTimeout = GetTickCount();
+	SendMessage(m_hStatusBar, SB_SETTEXT, 0, (LPARAM)buffer);
 }

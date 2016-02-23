@@ -1,6 +1,7 @@
 #include "ImageMgr.h"
 
 #include "Client.h"
+#include "Renderer.h"
 #include "Keyboard.h"
 #include "FileBrowser.h"
 #include "ColorPicker.h"
@@ -82,6 +83,8 @@ void CImageMgr::Save(const wchar_t * _fileName)
 	if (!m_pImage)
 		return;
 
+	CClient::Get()->GetRenderer()->SetText(0, L"Saving to \"%s\"...", _fileName);
+
 	int ulStart = GetTickCount();
 
 	FILE * file = _wfopen(_fileName, L"wb");
@@ -142,11 +145,15 @@ void CImageMgr::Save(const wchar_t * _fileName)
 	fclose(file);
 
 	wprintf(L"Saved to \"%s\" in %d ms File size = %d B\n", _fileName, (GetTickCount() - ulStart), size);
+
+	CClient::Get()->GetRenderer()->SetText(2000, L"Image has been saved!");
 }
 
 void CImageMgr::Load(const wchar_t * _fileName)
 {
 	int ulStart = GetTickCount();
+
+	CClient::Get()->GetRenderer()->SetText(0, L"Reading file %s...", _fileName);
 
 	wprintf(L"Reading file %s...\n", _fileName);
 
@@ -207,4 +214,6 @@ void CImageMgr::Load(const wchar_t * _fileName)
 	fclose(file);
 
 	wprintf(L"Loaded file from \"%s\" in %d ms\n", _fileName, GetTickCount() - ulStart);
+	
+	CClient::Get()->GetRenderer()->SetText(2000, L"File has been read!");
 }

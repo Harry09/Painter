@@ -23,6 +23,8 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	if (!m_pRenderer->GetWindow())
 		return;
 
+	m_pRenderer->SetText(0, L"Initialization...");
+
 	m_pMenu = new CMenu();
 	m_pMenu->ShowWindow();
 
@@ -39,6 +41,8 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	m_pKeyboard = new CKeyboard();
 
 	printf("CClient initialized! (%d ms)\n", GetTickCount() - ulStart);
+
+	m_pRenderer->SetText(0, L"Ready");
 
 	CClient::MainLoop();
 }
@@ -65,6 +69,8 @@ void CClient::MainLoop()
 
 		m_pImageMgr->Pulse();
 		m_pImageMgr->Render();
+
+		m_pRenderer->Pulse();
 
 		glfwSwapBuffers(m_pRenderer->GetWindow());
 		glfwWaitEvents();

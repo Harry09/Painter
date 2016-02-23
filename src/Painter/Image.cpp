@@ -84,6 +84,8 @@ void CImage::Pulse()
 		m_byMColor = _color;
 
 		CClient::Get()->GetMenu()->m_bGetColor = false;
+
+		CClient::Get()->GetRenderer()->SetText(0, L"Ready");
 	}
 	else if (CClient::Get()->GetMenu()->GetModeDrawing() == ID_DRAWPIXEL)
 	{
@@ -109,6 +111,8 @@ void CImage::Pulse()
 			{
 				m_fPos1 = CClient::Get()->GetCursor()->GetPos();
 				m_inClick = 2;
+
+				CClient::Get()->GetRenderer()->SetText(0, L"Now click somewhere on image to set the second position");
 			}
 			else if (m_inClick == 3)
 			{
@@ -126,6 +130,8 @@ void CImage::Pulse()
 				m_fPos2 = glm::ivec2(0, 0);
 
 				m_inClick = 0;
+
+				CClient::Get()->GetRenderer()->SetText(0, L"Click somewhere on image to set first position");
 			}
 		}
 		else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
@@ -147,6 +153,8 @@ void CImage::Pulse()
 			{
 				m_fPos1 = CClient::Get()->GetCursor()->GetPos();
 				m_inClick = 2;
+
+				CClient::Get()->GetRenderer()->SetText(0, L"Now click somewhere on image to set the second position");
 			}
 			else if (m_inClick == 3)
 			{
@@ -191,6 +199,8 @@ void CImage::Pulse()
 				m_fPos2 = glm::ivec2(0, 0);
 
 				m_inClick = 0;
+
+				CClient::Get()->GetRenderer()->SetText(0, L"Click somewhere on image to set first position");
 			}
 		}
 		else if (CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
@@ -249,7 +259,6 @@ void CImage::Pulse()
 	else
 		m_bRenderMarker = false;
 }
-
 
 void CImage::Render()
 {
