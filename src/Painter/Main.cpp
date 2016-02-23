@@ -27,9 +27,11 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	wchar_t file[MAX_PATH] = L"";
 
+#ifdef _DEBUG
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONIN$", "r", stdin);
+#endif
 
 	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
 	if (NULL == szArglist)
