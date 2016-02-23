@@ -31,4 +31,5 @@ public:
 
 	void ShowWindow();
 	ModeDrawing GetModeDrawing() { return (ModeDrawing)m_iMode; }
+	HWND GetHWnd() { return s_hWnd; }
 };

@@ -28,6 +28,23 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	m_pMenu = new CMenu();
 	m_pMenu->ShowWindow();
 
+#pragma region Setting windows pos
+	RECT rcMain, rcMenu;
+	int cx = GetSystemMetrics(SM_CXSCREEN);
+	int cy = GetSystemMetrics(SM_CYSCREEN);
+
+	HWND hRenderer = m_pRenderer->GetHWnd(), hMenu = m_pMenu->GetHWnd();
+
+	GetWindowRect(hRenderer, &rcMain);
+	SetWindowPos(hRenderer, HWND_TOP, cx/2 - (rcMain.right - rcMain.left)/3, cy / 2 - (rcMain.bottom - rcMain.top) / 2, 0, 0, SWP_NOSIZE);
+
+	GetWindowRect(hMenu, &rcMenu);
+	GetWindowRect(hRenderer, &rcMain);
+	SetWindowPos(hMenu, HWND_TOP, rcMain.left - (rcMenu.right - rcMenu.left), rcMain.top, 0, 0, SWP_NOSIZE);
+
+	SetFocus(m_pRenderer->GetHWnd());
+#pragma endregion
+
 	m_pView = new CView();
 
 	m_pImageMgr = new CImageMgr();
