@@ -268,7 +268,7 @@ void CImage::Render()
 	//glScalef(zoom,zoom,zoom);
 
 	// Background
-	CClient::Get()->GetRenderer()->RenderRGBQuad(_offset, glm::vec2((m_sizeImage.x - 2) * _scale, (m_sizeImage.y - 2) * _scale), m_byBgColor);
+	CClient::Get()->GetRenderer()->RenderRGBQuad(_offset, glm::vec2((m_sizeImage.x - 1) * _scale, (m_sizeImage.y - 1) * _scale), m_byBgColor);
 
 	// Pixels
 	for (int x = 0; x < m_sizeImage.x; ++x)

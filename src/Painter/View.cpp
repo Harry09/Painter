@@ -1,6 +1,7 @@
 #include "View.h"
 
 #include "Client.h"
+#include "Renderer.h"
 #include "Cursor.h"
 #include "Keyboard.h"
 #include "ImageMgr.h"
@@ -58,4 +59,7 @@ void CView::ResetView()
 void CView::SetScale(float y)
 {
 	m_fScale += y / 10 * m_fScale;
+
+	m_iOffset.x -= y * -(CClient::Get()->GetRenderer()->GetWindowSize().x * 1 / 3 - CClient::Get()->GetCursor()->GetPos().x)/4;
+	m_iOffset.y -= y * -(CClient::Get()->GetRenderer()->GetWindowSize().y * 1 / 3 - CClient::Get()->GetCursor()->GetPos().y)/4;
 }
