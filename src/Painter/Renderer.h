@@ -9,7 +9,7 @@ private:
 
 	HWND m_hStatusBar;
 	int m_iTimeoutStatus;
-	int m_ulStartTimeout;
+	int m_iStartTimeout;
 
 private:
 	void InitOpenGL();
@@ -20,10 +20,10 @@ public:
 	~CRenderer();
 	
 	//rgb = 0 - 255
-	void RenderRGBQuad(glm::vec2 _pos, glm::vec2 _size, cvec3 _rgb, float width = 0);
-	void RenderRGBQuadByPos(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _rgb, float width = 0);
-	void RenderLine(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _rgb, float width);
-	void RenderCircle(glm::vec2 _pos, cvec3 _rgb, float _radius, int _vertices = 180);
+	void RenderRGBQuad(const glm::vec2 &_pos, const glm::vec2 &_size, const cvec3 &_rgb, float width = 0);
+	void RenderRGBQuadByPos(const glm::vec2 &_pos1, const glm::vec2 &_pos2, const cvec3 &_rgb, float width = 0);
+	void RenderLine(const glm::vec2 &_pos1, const glm::vec2 &_pos2, const cvec3 &_rgb, float width);
+	void RenderCircle(const glm::vec2 &_pos, const cvec3 &_rgb, float _radius, int _vertices = 180);
 
 	GLFWwindow* GetWindow() const { return m_pWindow; }
 	glm::ivec2 GetWindowSize() const { return m_sizeWindow; }

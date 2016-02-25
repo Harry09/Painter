@@ -34,10 +34,5 @@ class CKeyboard;
 
 class CSettings;
 class CMenu;
-class CHelp;
-class CNewImage;
-
-class CColorPicker;
-class CFileBrowser;
 
 bool FileExists(char* name);

@@ -3,9 +3,16 @@
 #include "Client.h"
 
 CRenderer::CRenderer(glm::ivec2 _size) 
-	: m_sizeWindow(_size)
+	: m_sizeWindow(_size), m_pWindow(0)
 {
 	InitOpenGL();
+	InitStatusBar();
+
+	HWND _hWnd = GetHWnd();
+	// Disable resizing window
+	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE)&~WS_SIZEBOX);
+	// Disable maximize window
+	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE)&~WS_MAXIMIZEBOX);
 
 	printf("CRenderer initialized!\n");
 }
@@ -16,7 +23,7 @@ CRenderer::~CRenderer()
 	glfwTerminate();
 }
 
-void CRenderer::RenderRGBQuad(glm::vec2 _pos, glm::vec2 _size, cvec3 _color, float width)
+void CRenderer::RenderRGBQuad(const glm::vec2 &_pos, const glm::vec2 &_size, const cvec3 &_color, float width)
 {
 	if (!m_pWindow)
 		return;
@@ -49,7 +56,7 @@ void CRenderer::RenderRGBQuad(glm::vec2 _pos, glm::vec2 _size, cvec3 _color, flo
 	glPopMatrix();
 }
 
-void CRenderer::RenderRGBQuadByPos(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _color, float width)
+void CRenderer::RenderRGBQuadByPos(const glm::vec2 &_pos1, const glm::vec2 &_pos2, const cvec3 &_color, float width)
 {
 	if (!m_pWindow)
 		return;
@@ -82,7 +89,7 @@ void CRenderer::RenderRGBQuadByPos(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _colo
 	glPopMatrix();
 }
 
-void CRenderer::RenderLine(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _color, float width)
+void CRenderer::RenderLine(const glm::vec2 &_pos1, const glm::vec2 &_pos2, const cvec3 &_color, float width)
 {
 	glPushMatrix();
 		glColor3ub(_color.r, _color.g, _color.b);
@@ -95,7 +102,7 @@ void CRenderer::RenderLine(glm::vec2 _pos1, glm::vec2 _pos2, cvec3 _color, float
 	glPopMatrix();
 }
 
-void CRenderer::RenderCircle(glm::vec2 _pos, cvec3 _color, float _radius, int _vertices)
+void CRenderer::RenderCircle(const glm::vec2 &_pos, const cvec3 &_color, float _radius, int _vertices)
 {
 	glPushMatrix();
 		glColor3ub(_color.r, _color.g, _color.b);
@@ -136,14 +143,6 @@ void CRenderer::InitOpenGL()
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
-
-	InitStatusBar();
-
-	HWND _hWnd = GetHWnd();
-	// Disable resizing window
-	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE)&~WS_SIZEBOX);
-	// Disable maximize window
-	SetWindowLong(_hWnd, GWL_STYLE, GetWindowLong(_hWnd, GWL_STYLE)&~WS_MAXIMIZEBOX);
 }
 
 void CRenderer::InitStatusBar()
@@ -153,17 +152,15 @@ void CRenderer::InitStatusBar()
 	icc.dwICC = ICC_BAR_CLASSES;
 	InitCommonControlsEx(&icc);
 
-	m_hStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL,  WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, GetHWnd(), (HMENU)200, CClient::Get()->GetHInstance(), NULL);
+	m_hStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, GetHWnd(), (HMENU)200, CClient::Get()->GetHInstance(), NULL);
 
 	int iStatusBarWidths[] = { m_sizeWindow.x, 300, -1 };
 	SendMessage(m_hStatusBar, SB_SETPARTS, 3, (LPARAM)iStatusBarWidths);
-
-	//SendMessage(m_hStatusBar, SB_SETTEXT, 0, (LPARAM)L"Ready");
 }
 
 void CRenderer::Pulse()
 {
-	if (m_iTimeoutStatus != 0 && m_iTimeoutStatus < GetTickCount() - m_ulStartTimeout)
+	if (m_iTimeoutStatus != 0 && m_iTimeoutStatus < GetTickCount() - m_iStartTimeout)
 		SetText(0, L"Ready");
 }
 
@@ -176,6 +173,6 @@ void CRenderer::SetText(int _timeout, wchar_t* _text, ...)
 	va_end(args);
 
 	m_iTimeoutStatus = _timeout;
-	m_ulStartTimeout = GetTickCount();
+	m_iStartTimeout = GetTickCount();
 	SendMessage(m_hStatusBar, SB_SETTEXT, 0, (LPARAM)buffer);
 }

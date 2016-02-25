@@ -13,9 +13,9 @@ private:
 	static float m_fScroll;
 
 private:
-	static void ScrollCallback(GLFWwindow* _window, double _x, double _y);
-	static void CursorPosCallback(GLFWwindow* _window, double _x, double _y);
-	static void CursorButtonCallback(GLFWwindow* window, int button, int action, int mods);
+	static void ScrollCallback(const GLFWwindow *_window, double _x, double _y);
+	static void CursorPosCallback(const GLFWwindow *_window, double _x, double _y);
+	static void CursorButtonCallback(const GLFWwindow *_window, int button, int action, int mods);
 	
 public:
 	CCursor();

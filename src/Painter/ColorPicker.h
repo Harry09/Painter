@@ -13,7 +13,7 @@ private:
 
 
 public:
-	CColorPicker(HWND _hWndParent = 0);
+	CColorPicker(const HWND &_hWndParent = 0);
 	~CColorPicker();
 
 	bool Accepted() { return m_bAccept; }

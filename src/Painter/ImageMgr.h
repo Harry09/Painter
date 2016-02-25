@@ -11,7 +11,7 @@ public:
 	CImageMgr();
 	~CImageMgr();
 
-	CImage* CreateImage(glm::vec2 _size, cvec3 _color);
+	CImage* CreateImage(const glm::vec2 &_size, const cvec3 &_color);
 	void DeleteImage() { delete m_pImage; }
 
 	void Pulse();

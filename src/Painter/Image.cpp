@@ -10,7 +10,7 @@
 #include "Math.h"
 
 
-CImage::CImage(glm::ivec2 _size, cvec3 _bgColor)
+CImage::CImage(const glm::ivec2 &_size, const cvec3 &_bgColor)
 	: m_sizeImage(_size), m_byBgColor(_bgColor)
 {
 	m_pImage = new SPixel*[m_sizeImage.x];
@@ -316,21 +316,23 @@ void CImage::Render()
 	}
 }
 
-void CImage::SetPixel(glm::vec2 _pos, glm::vec3 _color, bool scaling)
+void CImage::SetPixel(const glm::vec2 &_pos, const glm::vec3 &_color, bool scaling)
 {
+	glm::vec2 pos = _pos;
+
 	if (scaling)
 	{
 		glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
 		float _scale = CClient::Get()->GetView()->GetScale();
 
-		_pos -= _offset;
+		pos -= _offset;
 
 		for (int x = 0; x < m_sizeImage.x; ++x)
 		{
 			for (int y = 0; y < m_sizeImage.y; ++y)
 			{
-				if (CMath::inRange(_pos.x, (x - 0.5 - m_fMarkerSize) * _scale, ( x - 0.5 + m_fMarkerSize) * _scale) &&
-					CMath::inRange(_pos.y, (y - 0.5 - m_fMarkerSize) * _scale, ( y - 0.5 + m_fMarkerSize) * _scale))
+				if (CMath::inRange(pos.x, (x - 0.5 - m_fMarkerSize) * _scale, ( x - 0.5 + m_fMarkerSize) * _scale) &&
+					CMath::inRange(pos.y, (y - 0.5 - m_fMarkerSize) * _scale, ( y - 0.5 + m_fMarkerSize) * _scale))
 				{
 					if ((x - 1) < 0 || (y - 1) < 0)
 						return;
@@ -342,11 +344,11 @@ void CImage::SetPixel(glm::vec2 _pos, glm::vec3 _color, bool scaling)
 	}
 	else
 	{
-		m_pImage[(int)_pos.x][(int)_pos.y].m_color = _color;
+		m_pImage[(int)pos.x][(int)pos.y].m_color = _color;
 	}
 }
 
-void CImage::SetBgColor(cvec3 _bgColor)
+void CImage::SetBgColor(const cvec3 &_bgColor)
 {
 	for (int x = 0; x < m_sizeImage.x; ++x)
 	{
@@ -372,23 +374,24 @@ void CImage::ClearScreen()
 	}
 }
 
-cvec3 CImage::GetColor(glm::vec2 _pos, bool scaling)
+cvec3 CImage::GetColor(const glm::vec2 &_pos, bool scaling)
 {
 	cvec3 _color = cvec3(0, 0, 0);
+	glm::vec2 pos = _pos;
 
 	if (scaling)
 	{
 		glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
 		float _scale = CClient::Get()->GetView()->GetScale();
 
-		_pos -= _offset;
+		pos -= _offset;
 
 		for (int x = 0; x < m_sizeImage.x; ++x)
 		{
 			for (int y = 0; y < m_sizeImage.y; ++y)
 			{
-				if (CMath::inRange(_pos.x, (x - 1.f) * _scale, x * _scale) &&
-					CMath::inRange(_pos.y, (y - 1.f) * _scale, y * _scale))
+				if (CMath::inRange(pos.x, (x - 1.f) * _scale, x * _scale) &&
+					CMath::inRange(pos.y, (y - 1.f) * _scale, y * _scale))
 				{
 					if ((x - 1) < 0 || (y - 1) < 0)
 						return cvec3(255,255,255);
@@ -400,7 +403,7 @@ cvec3 CImage::GetColor(glm::vec2 _pos, bool scaling)
 	}
 	else
 	{
-		_color = m_pImage[(int)_pos.x][(int)_pos.y].m_color;
+		_color = m_pImage[(int)pos.x][(int)pos.y].m_color;
 	}
 
 	return _color;

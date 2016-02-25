@@ -17,7 +17,7 @@ private:
 
 public:
 	// TYPE: DIALOG_SAVE, DIALOG_OPEN
-	CFileBrowser(TypeFileBrowser type, wchar_t* _filer = L"All\0*.*\0", HWND _hWndParent = 0);
+	CFileBrowser(TypeFileBrowser type, wchar_t* _filer = L"All\0*.*\0", const HWND &_hWndParent = 0);
 	~CFileBrowser();
 
 	wchar_t* GetFileName() { return m_szFileName; }

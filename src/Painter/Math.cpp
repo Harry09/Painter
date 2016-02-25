@@ -1,7 +1,7 @@
 #include "Math.h"
 
 
-float CMath::PointDir(glm::vec2 pos1, glm::vec2 pos2)
+float CMath::PointDir(const glm::vec2 &pos1, const glm::vec2 &pos2)
 {
 	return float(atan2((pos1.y - pos2.y), (pos1.x - pos2.x)) * 180 / M_PI + 180);
 }
@@ -21,7 +21,7 @@ glm::vec2 CMath::LengthDir(float len, float dir)
 	return _pos;
 }
 
-float CMath::GetLen(glm::vec2 pos1, glm::vec2 pos2)
+float CMath::GetLen(const glm::vec2 &pos1, const glm::vec2 &pos2)
 {
 	float len = 0.f;
 

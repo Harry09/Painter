@@ -30,19 +30,19 @@ private:
 
 
 public:
-	CImage(glm::ivec2 _size, cvec3 _bgColor);
+	CImage(const glm::ivec2 &_size, const cvec3 &_bgColor);
 	~CImage();
 
 	void Pulse();
 	void Render();
 	
-	void SetPixel(glm::vec2 _pos, glm::vec3 _color, bool scaling = true);
-	SPixel GetPixel(glm::vec2 _pos) const { return m_pImage[(int)_pos.x][(int)_pos.y]; }
+	void SetPixel(const glm::vec2 &_pos, const glm::vec3 &_color, bool scaling = true);
+	SPixel GetPixel(const glm::vec2 &_pos) const { return m_pImage[(int)_pos.x][(int)_pos.y]; }
 
 	SPixel** GetImage() const { return m_pImage; }
 	glm::ivec2 GetImageSize() { return m_sizeImage; }
 
-	void SetBgColor(cvec3 _bgColor);
+	void SetBgColor(const cvec3 &_bgColor);
 	cvec3 GetBackgroundColor() { return m_byBgColor; }
 
 	void SetMColor(cvec3 _color) { m_byMColor = _color; }
@@ -50,6 +50,6 @@ public:
 
 	void ClearScreen();
 
-	cvec3 GetColor(glm::vec2 _pos, bool scaling = true);
+	cvec3 GetColor(const glm::vec2 &_pos, bool scaling = true);
 };
 

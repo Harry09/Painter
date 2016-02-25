@@ -39,10 +39,13 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	else if (nArgs > 1)
 		wcscpy(file, szArglist[1]);
 
+	//int argc = __argc;
+	//char ** argv = __argv;
+
+
 	new CClient(hInstance, file);
 
 	LocalFree(szArglist);
-
 
 	return 0;
 }

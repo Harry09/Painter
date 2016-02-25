@@ -105,7 +105,7 @@ void CSettings::Save(bool getDlgValue)
 	{
 		if (m_iResolution != CClient::Get()->GetRenderer()->GetWindowSize())
 		{
-			MessageBoxA(0, "Restart program to saw new resolution.", "Painter", MB_ICONINFORMATION);
+			MessageBoxA(0, "Restart program", "Painter", MB_ICONINFORMATION);
 		}
 	}
 }

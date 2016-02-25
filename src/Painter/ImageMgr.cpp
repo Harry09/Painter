@@ -17,7 +17,7 @@ CImageMgr::~CImageMgr()
 		delete m_pImage;
 }
 
-CImage *CImageMgr::CreateImage(glm::vec2 _size, cvec3 _color)
+CImage *CImageMgr::CreateImage(const glm::vec2 &_size, const cvec3 &_color)
 {
 	if (m_pImage)
 		delete m_pImage;
@@ -85,7 +85,7 @@ void CImageMgr::Save(const wchar_t * _fileName)
 
 	CClient::Get()->GetRenderer()->SetText(0, L"Saving to \"%s\"...", _fileName);
 
-	int ulStart = GetTickCount();
+	int iStart = GetTickCount();
 
 	FILE * file = _wfopen(_fileName, L"wb");
 
@@ -144,14 +144,14 @@ void CImageMgr::Save(const wchar_t * _fileName)
 
 	fclose(file);
 
-	wprintf(L"Saved to \"%s\" in %d ms File size = %d B\n", _fileName, (GetTickCount() - ulStart), size);
+	wprintf(L"Saved to \"%s\" in %d ms File size = %d B\n", _fileName, (GetTickCount() - iStart), size);
 
 	CClient::Get()->GetRenderer()->SetText(2000, L"Image has been saved!");
 }
 
 void CImageMgr::Load(const wchar_t * _fileName)
 {
-	int ulStart = GetTickCount();
+	int iStart = GetTickCount();
 
 	CClient::Get()->GetRenderer()->SetText(0, L"Reading file %s...", _fileName);
 
@@ -213,7 +213,7 @@ void CImageMgr::Load(const wchar_t * _fileName)
 	
 	fclose(file);
 
-	wprintf(L"Loaded file from \"%s\" in %d ms\n", _fileName, GetTickCount() - ulStart);
+	wprintf(L"Loaded file from \"%s\" in %d ms\n", _fileName, GetTickCount() - iStart);
 	
 	CClient::Get()->GetRenderer()->SetText(2000, L"File has been read!");
 }

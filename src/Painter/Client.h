@@ -2,23 +2,33 @@
 
 #include "Prerequisites.h"
 
+enum ExitCodes
+{
+	ID_EXIT_CODE_UNINIT = 0,
+	ID_EXIT_CODE_OK
+};
+
 class CClient
 {
 private:
-	static CClient* s_pInst;
+	static CClient *s_pInst;
 
-	CRenderer* m_pRenderer;
-	CView* m_pView;
-	CImageMgr* m_pImageMgr;
-	CCursor* m_pCursor;
-	CKeyboard* m_pKeyboard;
-	CSettings* m_pSettings;
-	CMenu* m_pMenu;
+	CRenderer *m_pRenderer;
+	CView *m_pView;
+	CImageMgr *m_pImageMgr;
+	CCursor *m_pCursor;
+	CKeyboard *m_pKeyboard;
+	CSettings *m_pSettings;
+	CMenu *m_pMenu;
 
 	HINSTANCE m_hInstance;
 
+	int m_iExitCode;
+
 private:
 	void MainLoop();
+	void SetPosOfWindows();
+
 
 public:
 	CClient(HINSTANCE, wchar_t*);
@@ -34,5 +44,7 @@ public:
 	HINSTANCE GetHInstance() const { return m_hInstance; }
 
 	static CClient* Get() { return s_pInst; }
+
+	int GetExitCode() { return m_iExitCode; }
 };
 
