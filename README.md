@@ -8,3 +8,4 @@ I would test myself in programming in C++
 - GLFW 3
 - GLM
 - OpenGL
+- FreeImage
