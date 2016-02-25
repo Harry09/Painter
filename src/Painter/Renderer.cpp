@@ -154,17 +154,17 @@ void CRenderer::InitStatusBar()
 
 	m_hStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, GetHWnd(), (HMENU)200, CClient::Get()->GetHInstance(), NULL);
 
-	int iStatusBarWidths[] = { m_sizeWindow.x, 300, -1 };
-	SendMessage(m_hStatusBar, SB_SETPARTS, 3, (LPARAM)iStatusBarWidths);
+	int iStatusBarWidths[] = { m_sizeWindow.x*3/4, -1 };
+	SendMessage(m_hStatusBar, SB_SETPARTS, 2, (LPARAM)iStatusBarWidths);
 }
 
 void CRenderer::Pulse()
 {
 	if (m_iTimeoutStatus != 0 && m_iTimeoutStatus < GetTickCount() - m_iStartTimeout)
-		SetText(0, L"Ready");
+		SetText(0, 0, L"Ready");
 }
 
-void CRenderer::SetText(int _timeout, wchar_t* _text, ...)
+void CRenderer::SetText(int id, int _timeout, wchar_t* _text, ...)
 {
 	wchar_t buffer[256];
 	va_list args;
@@ -174,5 +174,5 @@ void CRenderer::SetText(int _timeout, wchar_t* _text, ...)
 
 	m_iTimeoutStatus = _timeout;
 	m_iStartTimeout = GetTickCount();
-	SendMessage(m_hStatusBar, SB_SETTEXT, 0, (LPARAM)buffer);
+	SendMessage(m_hStatusBar, SB_SETTEXT, id, (LPARAM)buffer);
 }

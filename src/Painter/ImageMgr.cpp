@@ -83,7 +83,7 @@ void CImageMgr::Save(const wchar_t * _fileName)
 	if (!m_pImage)
 		return;
 
-	CClient::Get()->GetRenderer()->SetText(0, L"Saving to \"%s\"...", _fileName);
+	CClient::Get()->GetRenderer()->SetText(0,0, L"Saving to \"%s\"...", _fileName);
 
 	int iStart = GetTickCount();
 
@@ -146,14 +146,14 @@ void CImageMgr::Save(const wchar_t * _fileName)
 
 	wprintf(L"Saved to \"%s\" in %d ms File size = %d B\n", _fileName, (GetTickCount() - iStart), size);
 
-	CClient::Get()->GetRenderer()->SetText(2000, L"Image has been saved!");
+	CClient::Get()->GetRenderer()->SetText(0, 2000, L"Image has been saved!");
 }
 
 void CImageMgr::Load(const wchar_t * _fileName)
 {
 	int iStart = GetTickCount();
 
-	CClient::Get()->GetRenderer()->SetText(0, L"Reading file %s...", _fileName);
+	CClient::Get()->GetRenderer()->SetText(0,0, L"Reading file %s...", _fileName);
 
 	wprintf(L"Reading file %s...\n", _fileName);
 
@@ -215,12 +215,12 @@ void CImageMgr::Load(const wchar_t * _fileName)
 
 	wprintf(L"Loaded file from \"%s\" in %d ms\n", _fileName, GetTickCount() - iStart);
 	
-	CClient::Get()->GetRenderer()->SetText(2000, L"File has been read!");
+	CClient::Get()->GetRenderer()->SetText(0, 2000, L"File has been read!");
 }
 
 void CImageMgr::ExportTo(int _format, const wchar_t *_fileName)
 {
-	CClient::Get()->GetRenderer()->SetText(0, L"Exporting to \"%s\"...", _fileName);
+	CClient::Get()->GetRenderer()->SetText(0,0, L"Exporting to \"%s\"...", _fileName);
 
 	int cx = m_pImage->GetImageSize().x,
 		cy = m_pImage->GetImageSize().y;
@@ -250,5 +250,5 @@ void CImageMgr::ExportTo(int _format, const wchar_t *_fileName)
 	FreeImage_Unload(image);
 	delete[] pixels;
 
-	CClient::Get()->GetRenderer()->SetText(2000, L"Image has been exported!");
+	CClient::Get()->GetRenderer()->SetText(0, 2000, L"Image has been exported!");
 }

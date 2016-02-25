@@ -32,6 +32,6 @@ public:
 	void Pulse();
 
 	// Timeout in ms. (0 = never)
-	void SetText(int timeout, wchar_t* _text, ...);
+	void SetText(int id, int timeout, wchar_t* _text, ...);
 };
 

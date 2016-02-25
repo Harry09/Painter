@@ -136,9 +136,9 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 						m_iMode = 0;
 
 					if (m_iMode == 1 || m_iMode == 2)
-						CClient::Get()->GetRenderer()->SetText(0, L"First click somewhere on image to set first position");
+						CClient::Get()->GetRenderer()->SetText(0,0, L"First click somewhere on image to set first position");
 					else
-						CClient::Get()->GetRenderer()->SetText(0, L"Ready");
+						CClient::Get()->GetRenderer()->SetText(0,0, L"Ready");
 
 				} break;
 				case IDC_GETCOLOR:
@@ -146,7 +146,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					printf("Getting color...\n");
 					m_bGetColor = true;
 
-					CClient::Get()->GetRenderer()->SetText(0, L"Just click somewhere to get color. Color will be copied to clipboard");
+					CClient::Get()->GetRenderer()->SetText(0,0, L"Just click somewhere to get color. Color will be copied to clipboard");
 				} break;
 				case IDC_EXPORT:
 				{

@@ -46,5 +46,7 @@ public:
 	static CClient* Get() { return s_pInst; }
 
 	int GetExitCode() { return m_iExitCode; }
+
+	void ShowCursorPos();
 };
 

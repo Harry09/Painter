@@ -32,7 +32,7 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 	if (!m_pRenderer->GetWindow())
 		return;
 
-	m_pRenderer->SetText(0, L"Initialization...");
+	m_pRenderer->SetText(0,0, L"Initialization...");
 
 	m_pMenu = new CMenu();
 	m_pMenu->ShowWindow();
@@ -54,7 +54,7 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 
 	printf("CClient initialized! (%d ms)\n", GetTickCount() - iStart);
 
-	m_pRenderer->SetText(0, L"Ready");
+	m_pRenderer->SetText(0,0, L"Ready");
 
 	m_iExitCode = 1;
 
@@ -74,6 +74,21 @@ CClient::~CClient()
 	}
 }
 
+void CClient::ShowCursorPos()
+{
+	glm::ivec2 _pos = m_pCursor->GetPos();
+
+	glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
+	float _scale = CClient::Get()->GetView()->GetScale();
+
+	_pos -= _offset;
+
+	_pos.x = _pos.x/_scale + 1;
+	_pos.y = _pos.y/_scale + 1;
+
+	m_pRenderer->SetText(1, 0, L"(%d, %d)", _pos.x, _pos.y);
+}
+
 void CClient::MainLoop()
 {
 	while (!glfwWindowShouldClose(m_pRenderer->GetWindow()))
@@ -84,6 +99,8 @@ void CClient::MainLoop()
 
 		m_pImageMgr->Pulse();
 		m_pImageMgr->Render();
+
+		ShowCursorPos();
 
 		m_pRenderer->Pulse();
 

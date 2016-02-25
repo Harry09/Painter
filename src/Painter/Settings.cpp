@@ -128,14 +128,14 @@ void CSettings::Load()
 	fclose(_file);
 
 	
-	char _sWidth[4] = "";
+	char _sWidth[6] = "";
 	
 	// Width
 	sprintf(_sWidth, "%d", m_iResolution.x);
 	SetWindowTextA(GetDlgItem(m_hWnd, IDC_WIDTH), _sWidth);
 
 	// Height
-	char _sHeight[4] = "";
+	char _sHeight[6] = "";
 	
 	sprintf(_sHeight, "%d", m_iResolution.y);
 	SetWindowTextA(GetDlgItem(m_hWnd, IDC_HEIGHT), _sHeight);
