@@ -3,7 +3,7 @@
 COLORREF CColorPicker::s_dwAcrCustClr[16];
 DWORD CColorPicker::s_dwRgbCurrent;
 
-CColorPicker::CColorPicker(const HWND &_hWndParent)
+CColorPicker::CColorPicker(HWND _hWndParent)
 {
 	CHOOSECOLOR cc;
 	HBRUSH hbrush;

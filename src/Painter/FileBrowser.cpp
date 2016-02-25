@@ -2,7 +2,7 @@
 
 
 
-CFileBrowser::CFileBrowser(TypeFileBrowser type, wchar_t *_filter, const HWND &_hWndParent)
+CFileBrowser::CFileBrowser(TypeFileBrowser type, wchar_t *_filter, HWND _hWndParent)
 {
 	if (type > 1)
 		return;
