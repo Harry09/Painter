@@ -10,6 +10,8 @@
 #include <GLFW\glfw3.h>
 #include <GLFW\glfw3native.h>
 
+#include <FreeImage.h>
+
 #include <Windows.h>
 #include <stdio.h>
 #include <ctime>
@@ -35,4 +37,6 @@ class CKeyboard;
 class CSettings;
 class CMenu;
 
+
 bool FileExists(char* name);
+const wchar_t *getExt(const wchar_t *fspec);

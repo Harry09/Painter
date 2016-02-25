@@ -22,6 +22,7 @@ CFileBrowser::CFileBrowser(TypeFileBrowser type, wchar_t *_filter, const HWND &_
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	ofn.lpstrDefExt = L"rle";
 
 	if (type == DIALOG_OPEN)
 	{

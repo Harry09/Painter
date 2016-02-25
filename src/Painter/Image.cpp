@@ -9,7 +9,6 @@
 #include "Menu.h"
 #include "Math.h"
 
-
 CImage::CImage(const glm::ivec2 &_size, const cvec3 &_bgColor)
 	: m_sizeImage(_size), m_byBgColor(_bgColor)
 {
@@ -378,7 +377,7 @@ cvec3 CImage::GetColor(const glm::vec2 &_pos, bool scaling)
 {
 	cvec3 _color = cvec3(0, 0, 0);
 	glm::vec2 pos = _pos;
-
+	
 	if (scaling)
 	{
 		glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
@@ -405,6 +404,6 @@ cvec3 CImage::GetColor(const glm::vec2 &_pos, bool scaling)
 	{
 		_color = m_pImage[(int)pos.x][(int)pos.y].m_color;
 	}
-
+	
 	return _color;
 }

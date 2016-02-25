@@ -19,6 +19,14 @@ bool FileExists(char* name)
 		return false;
 }
 
+const wchar_t *getExt(const wchar_t *fspec) {
+	wchar_t *e = wcsrchr((wchar_t *)fspec, '.');
+
+	if (e == NULL)
+		e = L"";
+
+	return e;
+}
 
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {

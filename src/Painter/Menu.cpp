@@ -91,20 +91,12 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 				} break;
 				case IDC_ISAVE:
 				{
-					CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
+					CFileBrowser browser(DIALOG_SAVE, L"Project PK (*.pk)\0*.pk\0");
 
 					if (browser.Accepted())
 					{
 						wchar_t _fileName[MAX_PATH] = { 0 };
 						wcscpy(_fileName, browser.GetFileName());
-						int _lenFN = wcslen(_fileName);
-
-						if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
-						{
-
-							wcscat(_fileName, L".pk");
-						}
-
 						CClient::Get()->GetImgMgr()->Save(_fileName);
 					}
 				} break;
@@ -116,13 +108,6 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					{
 						wchar_t _fileName[MAX_PATH] = { 0 };
 						wcscpy(_fileName, browser.GetFileName());
-						int _lenFN = wcslen(_fileName);
-
-						if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
-						{
-							wcscat(_fileName, L".pk");
-						}
-
 						CClient::Get()->GetImgMgr()->Load(_fileName);
 					}
 				} break;
@@ -162,6 +147,26 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					m_bGetColor = true;
 
 					CClient::Get()->GetRenderer()->SetText(0, L"Just click somewhere to get color. Color will be copied to clipboard");
+				} break;
+				case IDC_EXPORT:
+				{
+					CFileBrowser browser(DIALOG_SAVE, L"Image Bitmap (*.bmp)\0*.bmp\0Icon (*.ico)\0*.ico\0Image JPG/JPEG (*.jpg)\0*.jpg\0Image PNG (*.png)\0*.png\0");
+
+					if (browser.Accepted())
+					{
+						wchar_t _fileName[MAX_PATH] = { 0 };
+						wcscpy(_fileName, browser.GetFileName());
+
+						if (!wcscmp(getExt(_fileName), L".bmp"))
+							CClient::Get()->GetImgMgr()->ExportTo(BMP_FF, _fileName);
+						if (!wcscmp(getExt(_fileName), L".ico"))
+							CClient::Get()->GetImgMgr()->ExportTo(ICO_FF, _fileName);
+						if (!wcscmp(getExt(_fileName), L".jpg") || !wcscmp(getExt(_fileName), L".jpeg"))
+							CClient::Get()->GetImgMgr()->ExportTo(JPEG_FF, _fileName);
+						if (!wcscmp(getExt(_fileName), L".png"))
+							CClient::Get()->GetImgMgr()->ExportTo(PNG_FF, _fileName);
+					}
+
 				} break;
 				case IDC_SETTINGS:
 				{

@@ -217,3 +217,38 @@ void CImageMgr::Load(const wchar_t * _fileName)
 	
 	CClient::Get()->GetRenderer()->SetText(2000, L"File has been read!");
 }
+
+void CImageMgr::ExportTo(int _format, const wchar_t *_fileName)
+{
+	CClient::Get()->GetRenderer()->SetText(0, L"Exporting to \"%s\"...", _fileName);
+
+	int cx = m_pImage->GetImageSize().x,
+		cy = m_pImage->GetImageSize().y;
+
+	BYTE* pixels = new BYTE[3 * cx * cy];
+
+	int i = 0;
+
+	for (int y = cy - 1; y >= 0; --y)
+	{
+		for (int x = 0; x < cx; ++x)
+		{
+			cvec3 _color = m_pImage->GetPixel(glm::vec2(x, y)).m_color;
+
+			pixels[i] = _color.b;
+			i++;
+			pixels[i] = _color.g;
+			i++;
+			pixels[i] = _color.r;
+			i++;
+		}
+	}
+
+	FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, cx, cy, 3 * cx, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, false);
+	FreeImage_SaveU((FREE_IMAGE_FORMAT)_format, image, _fileName, 0);
+
+	FreeImage_Unload(image);
+	delete[] pixels;
+
+	CClient::Get()->GetRenderer()->SetText(2000, L"Image has been exported!");
+}
