@@ -17,10 +17,7 @@ CImage::CImage(const glm::ivec2 &_size, const cvec3 &_bgColor)
 	for (int x = 0; x < m_iSizeImage.x; ++x)
 	{
 		m_pImage[x] = new SPixel[m_iSizeImage.y];
-	}
 
-	for (int x = 0; x < m_iSizeImage.x; ++x)
-	{
 		for (int y = 0; y < m_iSizeImage.y; ++y)
 		{
 			m_pImage[x][y].m_color = m_byBgColor; //glm::ivec3(rand() & 255, rand() & 255, rand() & 255);
