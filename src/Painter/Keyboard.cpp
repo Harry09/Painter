@@ -7,9 +7,13 @@ short CKeyboard::m_iKey;
 char CKeyboard::m_iStatus;
 char CKeyboard::m_iMode;
 
+CKeyboard *CKeyboard::s_pInst;
+
 CKeyboard::CKeyboard()
 {
-	glfwSetKeyCallback(CClient::Get()->GetRenderer()->GetWindow(), KeyCallback);
+	s_pInst = this;
+
+	glfwSetKeyCallback(CRenderer::Get()->GetWindow(), KeyCallback);
 
 	printf("CKeyboard initialized!\n");
 }

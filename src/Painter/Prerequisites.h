@@ -38,5 +38,5 @@ class CSettings;
 class CMenu;
 
 
-bool FileExists(char* name);
-const wchar_t *getExt(const wchar_t *fspec);
+bool FileExists(char *_name);
+const wchar_t *getExt(const wchar_t *_fspec);

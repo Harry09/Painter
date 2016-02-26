@@ -31,5 +31,11 @@ public:
 	void ExportTo(int _format, const wchar_t *_file);
 
 	CImage* GetImage() const { return m_pImage; }
+
+
+	static CImageMgr *Get() { return s_pInst; }
+
+private:
+	static CImageMgr *s_pInst;
 };
 

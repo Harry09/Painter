@@ -32,4 +32,11 @@ public:
 	void ShowWindow();
 	ModeDrawing GetModeDrawing() { return (ModeDrawing)m_iMode; }
 	HWND GetHWnd() { return s_hWnd; }
+
+
+	static CMenu *Get() { return s_pInst; }
+
+private:
+	static CMenu *s_pInst;
+
 };

@@ -13,7 +13,7 @@ public:
 	CKeyboard();
 	~CKeyboard();
 
-	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void KeyCallback(GLFWwindow* _window, int _key, int _scancode, int _action, int _mods);
 
 	short GetKey() { return m_iKey; }
 	char GetStatus() { return m_iStatus; }
@@ -21,6 +21,12 @@ public:
 
 	bool isPressed(int _button) { return m_iStatus == GLFW_PRESS && m_iKey == _button; }
 	bool isReleased(int _button) { return m_iStatus == GLFW_RELEASE && m_iKey == _button; }
-	bool isRepeated(int _button) { return m_iStatus == GLFW_REPEAT && m_iKey == _button; }
+	bool isRepeated(int _button) { return m_iStatus == GLFW_REPEAT && m_iKey == _button; }	
+	
+	
+	static CKeyboard *Get() { return s_pInst; }
+
+private:
+	static CKeyboard *s_pInst;
 };
 

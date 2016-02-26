@@ -6,8 +6,11 @@
 #include "FileBrowser.h"
 #include "ColorPicker.h"
 
+CImageMgr *CImageMgr::s_pInst;
+
 CImageMgr::CImageMgr()
 {
+	s_pInst = this;
 	m_pImage = 0;
 }
 
@@ -32,42 +35,31 @@ void CImageMgr::Pulse()
 	if (m_pImage)
 		m_pImage->Pulse();
 
-	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed('S'))
+	if (CKeyboard::Get()->GetMode() == GLFW_MOD_CONTROL && CKeyboard::Get()->isPressed('S'))
 	{
 		CFileBrowser browser(DIALOG_SAVE, L"PK Image (*.pk)\0*.pk\0");
 
 		if (browser.Accepted())
 		{
-			wchar_t _fileName[MAX_PATH] = { 0 };
-			wcscpy(_fileName, browser.GetFileName());
-			int _lenFN = wcslen(_fileName);
+			wchar_t _wsfileName[MAX_PATH] = { 0 };
+			wcscpy(_wsfileName, browser.GetFileName());
 
-			if (_fileName[_lenFN-1] != 'k' && _fileName[_lenFN-2] != 'p' && _fileName[_lenFN-3] != '.')
-			{
-				
-				wcscat(_fileName, L".pk");
-			}
-
-			Save(_fileName);
+			if (_wsfileName)
+				Save(_wsfileName);
 		}
 	}
 
-	if (CClient::Get()->GetKeyboard()->GetMode() == GLFW_MOD_CONTROL && CClient::Get()->GetKeyboard()->isPressed('O'))
+	if (CKeyboard::Get()->GetMode() == GLFW_MOD_CONTROL && CKeyboard::Get()->isPressed('O'))
 	{
 		CFileBrowser browser(DIALOG_OPEN, L"PK Image (*.pk)\0*.pk\0");
 
 		if (browser.Accepted())
 		{
-			wchar_t _fileName[MAX_PATH] = { 0 };
-			wcscpy(_fileName, browser.GetFileName());
-			int _lenFN = wcslen(_fileName);
+			wchar_t _wsfileName[MAX_PATH] = { 0 };
+			wcscpy(_wsfileName, browser.GetFileName());
 
-			if (_fileName[_lenFN - 1] != 'k' && _fileName[_lenFN - 2] != 'p' && _fileName[_lenFN - 3] != '.')
-			{
-				wcscat(_fileName, L".pk");
-			}
-
-			Load(_fileName);
+			if (_wsfileName)
+				Load(_wsfileName);
 		}
 	}
 }
@@ -83,13 +75,13 @@ void CImageMgr::Save(const wchar_t * _fileName)
 	if (!m_pImage)
 		return;
 
-	CClient::Get()->GetRenderer()->SetText(0,0, L"Saving to \"%s\"...", _fileName);
+	CRenderer::Get()->SetText(0,0, L"Saving to \"%s\"...", _fileName);
 
-	int iStart = GetTickCount();
+	int _iStart = GetTickCount();
 
-	FILE * file = _wfopen(_fileName, L"wb");
+	FILE *_file = _wfopen(_fileName, L"wb");
 
-	if (!file)
+	if (!_file)
 	{
 		MessageBoxA(0, "I can't open that file!\n", "ERORR!", MB_ICONERROR);
 		return;
@@ -98,32 +90,32 @@ void CImageMgr::Save(const wchar_t * _fileName)
 	wprintf(L"Saving to file %s...\n", _fileName);
 
 	// Sign
-	fwrite("PK", sizeof(char), 2, file);
+	fwrite("PK", sizeof(char), 2, _file);
 
 	// Image size
 	int _width = m_pImage->GetImageSize().x;
 	int _height = m_pImage->GetImageSize().y;
 
-	fwrite(&_width, sizeof(int), 1, file);
-	fwrite(&_height, sizeof(int), 1, file);
+	fwrite(&_width, sizeof(int), 1, _file);
+	fwrite(&_height, sizeof(int), 1, _file);
 
 	// Background color
-	fwrite(&m_pImage->GetBackgroundColor(), sizeof(unsigned char), 3, file);
+	fwrite(&m_pImage->GetBackgroundColor(), sizeof(unsigned char), 3, _file);
 
 	// Optmalization for loading
-	unsigned int pixelCounter = 0;
+	unsigned int _uipixelCounter = 0;
 
 	for (short x = 0; x < m_pImage->GetImageSize().x; ++x)
 	{
 		for (short y = 0; y < m_pImage->GetImageSize().y; ++y)
 		{
 			if (m_pImage->GetImage()[x][y].m_color != m_pImage->GetBackgroundColor())
-				pixelCounter++;
+				_uipixelCounter++;
 		}
 	}
-	fwrite(&pixelCounter, sizeof(unsigned int), 1, file);
+	fwrite(&_uipixelCounter, sizeof(unsigned int), 1, _file);
 
-	printf("Pixels = %d\n", pixelCounter);
+	printf("Pixels = %d\n", _uipixelCounter);
 
 	// Writing pixels to file
 	for (short x = 0; x < _width; ++x)
@@ -132,46 +124,46 @@ void CImageMgr::Save(const wchar_t * _fileName)
 		{
 			if (m_pImage->GetImage()[x][y].m_color != m_pImage->GetBackgroundColor())
 			{
-				fwrite(&x, sizeof(short), 1, file);
-				fwrite(&y, sizeof(short), 1, file);
-				fwrite(&m_pImage->GetImage()[x][y].m_color, 1, 3, file);
+				fwrite(&x, sizeof(short), 1, _file);
+				fwrite(&y, sizeof(short), 1, _file);
+				fwrite(&m_pImage->GetImage()[x][y].m_color, 1, 3, _file);
 			}
 		}
 	}
 
-	fseek(file, 0, SEEK_END);
-	int size = ftell(file);
+	fseek(_file, 0, SEEK_END);
+	int _iSize = ftell(_file);
 
-	fclose(file);
+	fclose(_file);
 
-	wprintf(L"Saved to \"%s\" in %d ms File size = %d B\n", _fileName, (GetTickCount() - iStart), size);
+	wprintf(L"Saved to \"%s\" in %d ms File size = %d B\n", _fileName, (GetTickCount() - _iStart), _iSize);
 
-	CClient::Get()->GetRenderer()->SetText(0, 2000, L"Image has been saved!");
+	CRenderer::Get()->SetText(0, 2000, L"Image has been saved!");
 }
 
 void CImageMgr::Load(const wchar_t * _fileName)
 {
-	int iStart = GetTickCount();
+	int _iStart = GetTickCount();
 
-	CClient::Get()->GetRenderer()->SetText(0,0, L"Reading file %s...", _fileName);
+	CRenderer::Get()->SetText(0,0, L"Reading file %s...", _fileName);
 
 	wprintf(L"Reading file %s...\n", _fileName);
 
-	FILE * file = _wfopen(_fileName, L"rb");
+	FILE * _file = _wfopen(_fileName, L"rb");
 
-	if (!file)
+	if (!_file)
 	{
 		wprintf(L"I can't open %s\n", _fileName);
 		return;
 	}
 
-	char _sign[3] = { 0 };
+	char _szSign[3] = { 0 };
 
-	fread(_sign, sizeof(char), 2, file);
+	fread(_szSign, sizeof(char), 2, _file);
 
-	_sign[2] = 0;
+	_szSign[2] = 0;
 
-	if (!strstr(_sign, "PK"))
+	if (!strstr(_szSign, "PK"))
 	{
 		wprintf(L"\"%s\" is not pk file format!\n", _fileName);
 		return;
@@ -181,20 +173,20 @@ void CImageMgr::Load(const wchar_t * _fileName)
 	int _width = 0;
 	int _height = 0;
 
-	fread(&_width, sizeof(int), 1, file);
-	fread(&_height, sizeof(int), 1, file);
+	fread(&_width, sizeof(int), 1, _file);
+	fread(&_height, sizeof(int), 1, _file);
 
 
 	// Background color
 	cvec3 _bgColor;
 
-	fread(&_bgColor, sizeof(unsigned char), 3, file);
+	fread(&_bgColor, sizeof(unsigned char), 3, _file);
 
 	// Creating image
 	CreateImage(glm::vec2(_width, _height), _bgColor);
 
 	unsigned int pixelCounter = 0;
-	fread(&pixelCounter, sizeof(unsigned int), 1, file);
+	fread(&pixelCounter, sizeof(unsigned int), 1, _file);
 	printf("Pixels = %d\n", pixelCounter);
 
 	short _x = 0, _y = 0;
@@ -202,30 +194,30 @@ void CImageMgr::Load(const wchar_t * _fileName)
 	for (unsigned i = 0; i < pixelCounter; ++i)
 	{
 		_x = 0; _y = 0;
-		fread(&_x, sizeof(short), 1, file);
-		fread(&_y, sizeof(short), 1, file);
+		fread(&_x, sizeof(short), 1, _file);
+		fread(&_y, sizeof(short), 1, _file);
 
 		cvec3 _rgb;
-		fread(&_rgb, 1, 3, file);
+		fread(&_rgb, 1, 3, _file);
 
 		m_pImage->SetPixel(glm::vec2(_x, _y), _rgb, false);
 	}
 	
-	fclose(file);
+	fclose(_file);
 
-	wprintf(L"Loaded file from \"%s\" in %d ms\n", _fileName, GetTickCount() - iStart);
+	wprintf(L"Loaded file from \"%s\" in %d ms\n", _fileName, GetTickCount() - _iStart);
 	
-	CClient::Get()->GetRenderer()->SetText(0, 2000, L"File has been read!");
+	CRenderer::Get()->SetText(0, 2000, L"File has been read!");
 }
 
 void CImageMgr::ExportTo(int _format, const wchar_t *_fileName)
 {
-	CClient::Get()->GetRenderer()->SetText(0,0, L"Exporting to \"%s\"...", _fileName);
+	CRenderer::Get()->SetText(0,0, L"Exporting to \"%s\"...", _fileName);
 
 	int cx = m_pImage->GetImageSize().x,
 		cy = m_pImage->GetImageSize().y;
 
-	BYTE* pixels = new BYTE[3 * cx * cy];
+	BYTE* _bPixels = new BYTE[3 * cx * cy];
 
 	int i = 0;
 
@@ -235,20 +227,20 @@ void CImageMgr::ExportTo(int _format, const wchar_t *_fileName)
 		{
 			cvec3 _color = m_pImage->GetPixel(glm::vec2(x, y)).m_color;
 
-			pixels[i] = _color.b;
+			_bPixels[i] = _color.b;
 			i++;
-			pixels[i] = _color.g;
+			_bPixels[i] = _color.g;
 			i++;
-			pixels[i] = _color.r;
+			_bPixels[i] = _color.r;
 			i++;
 		}
 	}
 
-	FIBITMAP* image = FreeImage_ConvertFromRawBits(pixels, cx, cy, 3 * cx, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, false);
+	FIBITMAP* image = FreeImage_ConvertFromRawBits(_bPixels, cx, cy, 3 * cx, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, false);
 	FreeImage_SaveU((FREE_IMAGE_FORMAT)_format, image, _fileName, 0);
 
 	FreeImage_Unload(image);
-	delete[] pixels;
+	delete[] _bPixels;
 
-	CClient::Get()->GetRenderer()->SetText(0, 2000, L"Image has been exported!");
+	CRenderer::Get()->SetText(0, 2000, L"Image has been exported!");
 }

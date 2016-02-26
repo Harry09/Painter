@@ -10,7 +10,7 @@ struct SPixel
 class CImage
 {
 private:
-	glm::ivec2 m_sizeImage;
+	glm::ivec2 m_iSizeImage;
 
 	float m_fMarkerSize;
 	bool m_bRenderMarker;
@@ -36,11 +36,11 @@ public:
 	void Pulse();
 	void Render();
 	
-	void SetPixel(const glm::vec2 &_pos, const glm::vec3 &_color, bool scaling = true);
+	void SetPixel(const glm::vec2 &_pos, const glm::vec3 &_color, bool _scaling = true);
 	SPixel GetPixel(const glm::vec2 &_pos) const { return m_pImage[(int)_pos.x][(int)_pos.y]; }
 
 	SPixel** GetImage() const { return m_pImage; }
-	glm::ivec2 GetImageSize() { return m_sizeImage; }
+	glm::ivec2 GetImageSize() { return m_iSizeImage; }
 
 	void SetBgColor(const cvec3 &_bgColor);
 	cvec3 GetBackgroundColor() { return m_byBgColor; }
@@ -50,6 +50,6 @@ public:
 
 	void ClearScreen();
 
-	cvec3 GetColor(const glm::vec2 &_pos, bool scaling = true);
+	cvec3 GetColor(const glm::vec2 &_pos, bool _scaling = true);
 };
 

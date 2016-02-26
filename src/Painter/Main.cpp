@@ -28,7 +28,7 @@ const wchar_t *getExt(const wchar_t *fspec) {
 	return e;
 }
 
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int CALLBACK WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	LPWSTR *szArglist;
 	int nArgs;
@@ -47,11 +47,7 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	else if (nArgs > 1)
 		wcscpy(file, szArglist[1]);
 
-	//int argc = __argc;
-	//char ** argv = __argv;
-
-
-	new CClient(hInstance, file);
+	CClient client(file);
 
 	LocalFree(szArglist);
 

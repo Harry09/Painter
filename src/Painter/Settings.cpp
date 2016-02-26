@@ -4,8 +4,12 @@
 #include "Renderer.h"
 #include "Menu.h"
 
+CSettings *CSettings::s_pInst;
+
 CSettings::CSettings()
 {
+	s_pInst = this;
+
 	if (!FileExists("settings.pks"))
 	{
 		m_iResolution = glm::ivec2(800, 600);
@@ -28,7 +32,7 @@ void CSettings::ShowWindow()
 	MSG msg;
 	BOOL ret;
 
-	m_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_SETTINGS), CClient::Get()->GetRenderer()->GetHWnd(), DialogProc, 0);
+	m_hWnd = CreateDialogParam(GetModuleHandle(0), MAKEINTRESOURCE(IDD_SETTINGS), CRenderer::Get()->GetHWnd(), DialogProc, 0);
 
 	Load();
 
@@ -63,7 +67,7 @@ int CALLBACK CSettings::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARA
 			{
 				case SID_OK:
 				{
-					CClient::Get()->GetSettings()->Save();
+					CSettings::Get()->Save();
 
 					DestroyWindow(hwndDlg);
 				} break;
@@ -101,9 +105,9 @@ void CSettings::Save(bool getDlgValue)
 
 	fclose(_file);
 
-	if (CClient::Get() && CClient::Get()->GetRenderer())
+	if (CClient::Get() && CRenderer::Get())
 	{
-		if (m_iResolution != CClient::Get()->GetRenderer()->GetWindowSize())
+		if (m_iResolution != CRenderer::Get()->GetWindowSize())
 		{
 			MessageBoxA(0, "Restart program", "Painter", MB_ICONINFORMATION);
 		}
@@ -112,6 +116,13 @@ void CSettings::Save(bool getDlgValue)
 
 void CSettings::Load()
 {
+	unsigned safeIterations = 10;
+	FILE *file = nullptr;
+	do {
+		file = fopen("settings.pks", "rb");
+	} while (--safeIterations && (!file));
+
+
 	FILE *_file = fopen("settings.pks", "rb");
 
 	// sign

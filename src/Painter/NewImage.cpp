@@ -13,7 +13,7 @@ CNewImage::CNewImage()
 	MSG msg;
 	BOOL ret;
 
-	m_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_NEWIMAGE), CClient::Get()->GetRenderer()->GetHWnd(), DialogProc, 0);
+	m_hWnd = CreateDialogParam(GetModuleHandle(0), MAKEINTRESOURCE(IDD_NEWIMAGE), CRenderer::Get()->GetHWnd(), DialogProc, 0);
 
 	SetWindowTextA(GetDlgItem(m_hWnd, IDC_NWIDTH), "300");
 	SetWindowTextA(GetDlgItem(m_hWnd, IDC_NHEIGHT), "200");

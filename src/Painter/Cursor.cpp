@@ -5,16 +5,20 @@
 #include "ImageMgr.h"
 #include "Image.h"
 
-glm::ivec2 CCursor::m_pos;
+glm::ivec2 CCursor::m_iPos;
 int CCursor::m_iStatus;
 int CCursor::m_iButton;
 float CCursor::m_fScroll;
 
+CCursor *CCursor::s_pInst;
+
 CCursor::CCursor()
 {
-	glfwSetScrollCallback(CClient::Get()->GetRenderer()->GetWindow(), ScrollCallback);
-	glfwSetCursorPosCallback(CClient::Get()->GetRenderer()->GetWindow(), CursorPosCallback);
-	glfwSetMouseButtonCallback(CClient::Get()->GetRenderer()->GetWindow(), CursorButtonCallback);
+	s_pInst = this;
+
+	glfwSetScrollCallback(CRenderer::Get()->GetWindow(), ScrollCallback);
+	glfwSetCursorPosCallback(CRenderer::Get()->GetWindow(), CursorPosCallback);
+	glfwSetMouseButtonCallback(CRenderer::Get()->GetWindow(), CursorButtonCallback);
 
 	printf("CCursor initialized!\n");
 }
@@ -30,7 +34,7 @@ void CCursor::ScrollCallback(GLFWwindow* window, double x, double y)
 
 void CCursor::CursorPosCallback(GLFWwindow* window, double x, double y)
 {
-	m_pos = glm::vec2(x, y);
+	m_iPos = glm::vec2(x, y);
 }
 
 void CCursor::CursorButtonCallback(GLFWwindow* window, int button, int action, int mods)

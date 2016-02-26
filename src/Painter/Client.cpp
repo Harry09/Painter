@@ -10,9 +10,10 @@
 
 CClient* CClient::s_pInst;
 
-CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
-	: m_hInstance(_hInstance)
+CClient::CClient(wchar_t *_fileName)
 {
+	wprintf(L"fileName = %s\n", _fileName);
+
 	int iStart = GetTickCount();
 
 	m_pRenderer = 0;
@@ -28,7 +29,7 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 
 	m_pSettings = new CSettings();
 
-	m_pRenderer = new CRenderer(m_pSettings->GetResolution());
+	m_pRenderer = new CRenderer(m_pSettings->m_iResolution);
 	if (!m_pRenderer->GetWindow())
 		return;
 
@@ -58,6 +59,8 @@ CClient::CClient(HINSTANCE _hInstance, wchar_t *_fileName)
 
 	m_iExitCode = 1;
 
+	srand(time(NULL));
+
 	CClient::MainLoop();
 }
 
@@ -78,8 +81,8 @@ void CClient::ShowCursorPos()
 {
 	glm::ivec2 _pos = m_pCursor->GetPos();
 
-	glm::ivec2 _offset = CClient::Get()->GetView()->GetOffset();
-	float _scale = CClient::Get()->GetView()->GetScale();
+	glm::ivec2 _offset = CView::Get()->GetOffset();
+	float _scale = CView::Get()->GetScale();
 
 	_pos -= _offset;
 

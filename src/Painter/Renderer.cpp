@@ -2,9 +2,13 @@
 
 #include "Client.h"
 
+CRenderer *CRenderer::s_pInst;
+
 CRenderer::CRenderer(glm::ivec2 _size) 
-	: m_sizeWindow(_size), m_pWindow(0)
+	: m_iSizeWindow(_size), m_pWindow(0)
 {
+	s_pInst = this;
+
 	InitOpenGL();
 	InitStatusBar();
 
@@ -124,7 +128,7 @@ void CRenderer::InitOpenGL()
 		return;
 
 
-	m_pWindow = glfwCreateWindow(m_sizeWindow.x, m_sizeWindow.y, "Painter", NULL, NULL);
+	m_pWindow = glfwCreateWindow(m_iSizeWindow.x, m_iSizeWindow.y, "Painter", NULL, NULL);
 
 	if (!m_pWindow)
 	{
@@ -134,10 +138,10 @@ void CRenderer::InitOpenGL()
 	
 	glfwMakeContextCurrent(m_pWindow);
 
-	glViewport(0, 0, m_sizeWindow.x, m_sizeWindow.y);
+	glViewport(0, 0, m_iSizeWindow.x, m_iSizeWindow.y);
 
 	glMatrixMode(GL_PROJECTION);
-	gluOrtho2D(0.f, m_sizeWindow.x, m_sizeWindow.y, 0);
+	gluOrtho2D(0.f, m_iSizeWindow.x, m_iSizeWindow.y, 0);
 	glMatrixMode(GL_MODELVIEW);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -152,9 +156,9 @@ void CRenderer::InitStatusBar()
 	icc.dwICC = ICC_BAR_CLASSES;
 	InitCommonControlsEx(&icc);
 
-	m_hStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, GetHWnd(), (HMENU)200, CClient::Get()->GetHInstance(), NULL);
+	m_hStatusBar = CreateWindowEx(0, STATUSCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, GetHWnd(), (HMENU)200, GetModuleHandle(0), NULL);
 
-	int iStatusBarWidths[] = { m_sizeWindow.x*3/4, -1 };
+	int iStatusBarWidths[] = { m_iSizeWindow.x*3/4, -1 };
 	SendMessage(m_hStatusBar, SB_SETPARTS, 2, (LPARAM)iStatusBarWidths);
 }
 

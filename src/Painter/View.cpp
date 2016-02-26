@@ -7,8 +7,11 @@
 #include "ImageMgr.h"
 #include "Image.h"
 
+CView *CView::s_pInst;
+
 CView::CView()
 {
+	s_pInst = this;
 	m_fScale = 2;
 	m_bMoving = false;
 }
@@ -20,30 +23,30 @@ CView::~CView()
 
 void CView::Pulse()
 {	
-	if (CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_SHIFT))
+	if (CKeyboard::Get()->isPressed(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bMoving = true;
 	}
-	if ((CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
-		&& CClient::Get()->GetKeyboard()->isPressed(GLFW_KEY_LEFT_SHIFT))
+	if ((CCursor::Get()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CCursor::Get()->isPressed(GLFW_MOUSE_BUTTON_LEFT))
+		&& CKeyboard::Get()->isPressed(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bMoving = true;
-		m_iMoving = -m_iOffset + CClient::Get()->GetCursor()->GetPos();
+		m_iMoving = -m_iOffset + CCursor::Get()->GetPos();
 	}
-	else if ((CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
-		&& CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
+	else if ((CCursor::Get()->isPressed(GLFW_MOUSE_BUTTON_LEFT) || CCursor::Get()->isPressed(GLFW_MOUSE_BUTTON_RIGHT))
+		&& CKeyboard::Get()->isRepeated(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bMoving = true;
-		m_iOffset = -m_iMoving + CClient::Get()->GetCursor()->GetPos();
+		m_iOffset = -m_iMoving + CCursor::Get()->GetPos();
 	}
-	else if ((CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_RIGHT))
-		&& CClient::Get()->GetKeyboard()->isRepeated(GLFW_KEY_LEFT_SHIFT))
+	else if ((CCursor::Get()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CCursor::Get()->isReleased(GLFW_MOUSE_BUTTON_RIGHT))
+		&& CKeyboard::Get()->isRepeated(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bMoving = true;
-		m_iMoving = -m_iOffset + CClient::Get()->GetCursor()->GetPos();
+		m_iMoving = -m_iOffset + CCursor::Get()->GetPos();
 	}
-	else if ((CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CClient::Get()->GetCursor()->isReleased(GLFW_MOUSE_BUTTON_RIGHT))
-		&& CClient::Get()->GetKeyboard()->isReleased(GLFW_KEY_LEFT_SHIFT))
+	else if ((CCursor::Get()->isReleased(GLFW_MOUSE_BUTTON_LEFT) || CCursor::Get()->isReleased(GLFW_MOUSE_BUTTON_RIGHT))
+		&& CKeyboard::Get()->isReleased(GLFW_KEY_LEFT_SHIFT))
 	{
 		m_bMoving = false;
 	}
@@ -76,6 +79,6 @@ void CView::SetScale(float y)
 	else
 		_fScale = 1 + (21 - m_fScale)/10;
 		
-	m_iOffset.x -= y * -(CClient::Get()->GetRenderer()->GetWindowSize().x / 3 - CClient::Get()->GetCursor()->GetPos().x) / _fScale;
-	m_iOffset.y -= y * -(CClient::Get()->GetRenderer()->GetWindowSize().y / 3 - CClient::Get()->GetCursor()->GetPos().y) / _fScale;
+	m_iOffset.x -= y * -(CRenderer::Get()->GetWindowSize().x / 3 - CCursor::Get()->GetPos().x) / _fScale;
+	m_iOffset.y -= y * -(CRenderer::Get()->GetWindowSize().y / 3 - CCursor::Get()->GetPos().y) / _fScale;
 }

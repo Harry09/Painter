@@ -26,4 +26,10 @@ public:
 	bool isMoving() { return m_bMoving; }
 
 	void ResetView();
+
+
+	static CView *Get() { return s_pInst; }
+
+private:
+	static CView *s_pInst;
 };

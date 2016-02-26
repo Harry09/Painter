@@ -8,7 +8,7 @@ CHelp::CHelp()
 	MSG msg;
 	BOOL ret;
 
-	m_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_DIALOGHELP), CClient::Get()->GetRenderer()->GetHWnd(), DialogProc, 0);
+	m_hWnd = CreateDialogParam(GetModuleHandle(0), MAKEINTRESOURCE(IDD_DIALOGHELP), CRenderer::Get()->GetHWnd(), DialogProc, 0);
 
 	ShowWindow(m_hWnd, SW_SHOW);
 

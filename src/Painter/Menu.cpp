@@ -17,10 +17,13 @@ char CMenu::m_sMode[4][12] = { "Draw Line", "Draw Quad", "Draw Circle", "Draw Pi
 char CMenu::m_iMode;
 bool CMenu::m_bGetColor;
 
+CMenu *CMenu::s_pInst;
 
 CMenu::CMenu()
 {
-	s_hWnd = CreateDialogParam(CClient::Get()->GetHInstance(), MAKEINTRESOURCE(IDD_MENU), CClient::Get()->GetRenderer()->GetHWnd(), DialogProc, 0);
+	s_pInst = 0;
+
+	s_hWnd = CreateDialogParam(GetModuleHandle(0), MAKEINTRESOURCE(IDD_MENU), CRenderer::Get()->GetHWnd(), DialogProc, 0);
 
 	printf("CMenu initialized!\n");
 }
@@ -60,7 +63,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 	switch (uMsg)
 	{
 		case WM_CLOSE:
-			DestroyWindow(CClient::Get()->GetRenderer()->GetHWnd());
+			DestroyWindow(CRenderer::Get()->GetHWnd());
 			break;
 
 		case WM_DESTROY:
@@ -77,7 +80,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 
 					if (cpicker.Accepted())
 					{
-						CClient::Get()->GetImgMgr()->GetImage()->SetMColor(cpicker.GetRGB());
+						CImageMgr::Get()->GetImage()->SetMColor(cpicker.GetRGB());
 					}
 				} break;
 				case IDC_BGCOLOR:
@@ -86,7 +89,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 
 					if (cpicker.Accepted())
 					{
-						CClient::Get()->GetImgMgr()->GetImage()->SetBgColor(cpicker.GetRGB());
+						CImageMgr::Get()->GetImage()->SetBgColor(cpicker.GetRGB());
 					}
 				} break;
 				case IDC_ISAVE:
@@ -95,9 +98,10 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 
 					if (browser.Accepted())
 					{
-						wchar_t _fileName[MAX_PATH] = { 0 };
-						wcscpy(_fileName, browser.GetFileName());
-						CClient::Get()->GetImgMgr()->Save(_fileName);
+						wchar_t _wsfileName[MAX_PATH] = { 0 };
+						wcscpy(_wsfileName, browser.GetFileName());
+						if (_wsfileName)
+							CImageMgr::Get()->Save(_wsfileName);
 					}
 				} break;
 				case IDC_ILOAD:
@@ -106,25 +110,26 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 
 					if (browser.Accepted())
 					{
-						wchar_t _fileName[MAX_PATH] = { 0 };
-						wcscpy(_fileName, browser.GetFileName());
-						CClient::Get()->GetImgMgr()->Load(_fileName);
+						wchar_t _wsfileName[MAX_PATH] = { 0 };
+						wcscpy(_wsfileName, browser.GetFileName());
+						if (_wsfileName)
+							CImageMgr::Get()->Load(_wsfileName);
 					}
 				} break;
 				case IDC_INEW:
 				{
-					CNewImage newimage;
+					CNewImage newImage;
 					
-					if (newimage.Accepted())
-						CClient::Get()->GetImgMgr()->CreateImage(newimage.GetSize(), newimage.GetBgColor());
+					if (newImage.Accepted())
+						CImageMgr::Get()->CreateImage(newImage.GetSize(), newImage.GetBgColor());
 				} break;
 				case IDC_ICLEAR:
 				{
-					CClient::Get()->GetImgMgr()->GetImage()->ClearScreen();
+					CImageMgr::Get()->GetImage()->ClearScreen();
 				} break;
 				case IDC_RESETVIEW:
 				{
-					CClient::Get()->GetView()->ResetView();
+					CView::Get()->ResetView();
 				} break;
 				case IDC_DRAWINGMODE:
 				{
@@ -136,9 +141,9 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 						m_iMode = 0;
 
 					if (m_iMode == 1 || m_iMode == 2)
-						CClient::Get()->GetRenderer()->SetText(0,0, L"First click somewhere on image to set first position");
+						CRenderer::Get()->SetText(0,0, L"First click somewhere on image to set first position");
 					else
-						CClient::Get()->GetRenderer()->SetText(0,0, L"Ready");
+						CRenderer::Get()->SetText(0,0, L"Ready");
 
 				} break;
 				case IDC_GETCOLOR:
@@ -146,7 +151,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 					printf("Getting color...\n");
 					m_bGetColor = true;
 
-					CClient::Get()->GetRenderer()->SetText(0,0, L"Just click somewhere to get color. Color will be copied to clipboard");
+					CRenderer::Get()->SetText(0,0, L"Just click somewhere to get color. Color will be copied to clipboard");
 				} break;
 				case IDC_EXPORT:
 				{
@@ -154,23 +159,23 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 
 					if (browser.Accepted())
 					{
-						wchar_t _fileName[MAX_PATH] = { 0 };
-						wcscpy(_fileName, browser.GetFileName());
+						wchar_t _wsfileName[MAX_PATH] = { 0 };
+						wcscpy(_wsfileName, browser.GetFileName());
 
-						if (!wcscmp(getExt(_fileName), L".bmp"))
-							CClient::Get()->GetImgMgr()->ExportTo(BMP_FF, _fileName);
-						if (!wcscmp(getExt(_fileName), L".ico"))
-							CClient::Get()->GetImgMgr()->ExportTo(ICO_FF, _fileName);
-						if (!wcscmp(getExt(_fileName), L".jpg") || !wcscmp(getExt(_fileName), L".jpeg"))
-							CClient::Get()->GetImgMgr()->ExportTo(JPEG_FF, _fileName);
-						if (!wcscmp(getExt(_fileName), L".png"))
-							CClient::Get()->GetImgMgr()->ExportTo(PNG_FF, _fileName);
+						if (!wcscmp(getExt(_wsfileName), L".bmp"))
+							CImageMgr::Get()->ExportTo(BMP_FF, _wsfileName);
+						if (!wcscmp(getExt(_wsfileName), L".ico"))
+							CImageMgr::Get()->ExportTo(ICO_FF, _wsfileName);
+						if (!wcscmp(getExt(_wsfileName), L".jpg") || !wcscmp(getExt(_wsfileName), L".jpeg"))
+							CImageMgr::Get()->ExportTo(JPEG_FF, _wsfileName);
+						if (!wcscmp(getExt(_wsfileName), L".png"))
+							CImageMgr::Get()->ExportTo(PNG_FF, _wsfileName);
 					}
 
 				} break;
 				case IDC_SETTINGS:
 				{
-					CClient::Get()->GetSettings()->ShowWindow();
+					CSettings::Get()->ShowWindow();
 				} break;
 				case IDC_SHOWHELP:
 				{
@@ -179,7 +184,7 @@ int CALLBACK CMenu::DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 			}
 
 			// Auto focus
-			SetFocus(CClient::Get()->GetRenderer()->GetHWnd());
+			SetFocus(CRenderer::Get()->GetHWnd());
 		} break;
 	}
 
