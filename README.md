@@ -1,5 +1,5 @@
 # Painter
-My simply program to drawing images
+My simple program to drawing images
 
 # Why?
 I would test myself in programming in C++
